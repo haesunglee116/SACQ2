@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="SACQ: Structure-Aware Codebook Quantization for Ultra-Low-Bit Vision-Language-Action Models. Near-BF16 performance on GR00T N1.7 at approximately 1.5 language/action bits per weight.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="robots" content="noindex, nofollow">
+  <title>SACQ | Structure-Aware Codebook Quantization for VLA Models</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="navigation container" aria-label="Main navigation">
+      <a class="wordmark" href="#top">SACQ<span class="wordmark-dot" aria-hidden="true">.</span></a>
+      <div class="nav-links">
+        <a href="#abstract">Abstract</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#citation">Citation</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero container" id="top" aria-labelledby="paper-title">
+      <p class="eyebrow">Vision–Language–Action Models · Weight-Only Quantization</p>
+      <h1 id="paper-title"><span class="hero-name">SACQ</span><span class="hero-title">Structure-Aware Codebook Quantization<br class="desktop-break"> for Ultra-Low-Bit Vision-Language-Action Models</span></h1>
+      <!-- RELEASE: replace the two lines below with the approved author list and affiliations. -->
+      <p class="authors">Authors to be announced</p>
+      <p class="affiliations">Affiliations to be announced</p>
+      <div class="publication-links" aria-label="Publication resources">
+        <!-- RELEASE: replace disabled buttons with real links when the resources are public. -->
+        <button class="resource-button" type="button" disabled aria-label="Paper, not yet available">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
+          Paper <span class="button-note">Coming soon</span>
+        </button>
+        <button class="resource-button" type="button" disabled aria-label="Code, not yet available">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg>
+          Code <span class="button-note">Coming soon</span>
+        </button>
+      </div>
+      <p class="hero-highlight">Near-BF16 policy performance at <strong>~1.5 language/action bits per weight</strong>,<br class="desktop-break"> with a <strong>4.83× reduction</strong> in resident model memory.</p>
+    </section>
+
+    <section class="teaser container" aria-labelledby="teaser-title">
+      <h2 id="teaser-title" class="visually-hidden">Performance and memory at ultra-low precision</h2>
+      <figure class="main-figure">
+        <a class="figure-link desktop-teaser" href="assets/libero-main.svg" target="_blank" rel="noopener" aria-label="Open the full-size LIBERO performance and memory figure">
+          <img src="assets/libero-main.svg" width="2533" height="1179" alt="On GR00T N1.7, SACQ reaches 93.85% average LIBERO success at approximately 1.5 language/action bits per weight. Resident model memory decreases from 5.677 GB for BF16 to 1.175 GB for SACQ-1.5b.">
+        </a>
+        <div class="mobile-teaser">
+          <a class="figure-link" href="assets/libero-success.svg" target="_blank" rel="noopener" aria-label="Open the full-size LIBERO success figure"><img src="assets/libero-success.svg" width="1305" height="897" alt="Average LIBERO success versus nominal language/action bits per weight; SACQ retains 93.85% success at approximately 1.5 bpw."></a>
+          <a class="figure-link" href="assets/libero-main.svg" target="_blank" rel="noopener" aria-label="Open the full-size memory comparison"><svg viewBox="330 0 278 255" role="img" aria-label="Resident model memory decreases from 5.677 GB for BF16 to 1.175 GB for SACQ-1.5b, a 4.83-fold reduction."><image href="assets/libero-main.svg" width="607.891284" height="282.809148"/></svg></a>
+        </div>
+        <figcaption><strong>Ultra-low precision, close to the BF16 policy.</strong> SACQ combines structure-aware codebook fitting, action-aware bit allocation, and post-quantization refinement. On GR00T N1.7, it retains 93.85% average success across all four LIBERO suites at ~1.5 L/A bpw, just 0.25 percentage points below BF16.</figcaption>
+      </figure>
+      <dl class="key-results" aria-label="SACQ-1.5b on GR00T N1.7 and LIBERO">
+        <div><dt>LIBERO average success</dt><dd>93.85<span>%</span><p>BF16 reference: 94.10%</p></dd></div>
+        <div><dt>Resident model memory</dt><dd>1.175 <span>GB</span><p>BF16 reference: 5.677 GB</p></dd></div>
+        <div><dt>Memory reduction</dt><dd>4.83<span>×</span><p>At ~1.5 language/action bpw</p></dd></div>
+      </dl>
+      <details class="figure-notes">
+        <summary>Quantization scope and baseline details</summary>
+        <p>L/A bpw is the nominal, parameter-weighted average over 338 language-backbone and action-head candidate layers, excluding codebook and scale metadata. Other fixed components use 4-bit weights; activations remain BF16. Memory is measured for the full loaded policy.</p>
+        <p>The GPTQ curve includes a custom GPTQ-style ternary extension at log₂(3) ≈ 1.585 bpw; the 2- and 3-bpw points use standard GPTQ. “TWLA” in the figure denotes the TWLA-compatible PyTorch VLA port described in the paper. Lines connect evaluated configurations. Each configuration uses 500 episodes per LIBERO suite.</p>
+      </details>
+    </section>
+
+    <section class="abstract-band section" id="abstract" aria-labelledby="abstract-title">
+      <div class="reading-width">
+        <h2 id="abstract-title">Abstract</h2>
+        <p>Vision-Language-Action (VLA) models produce remarkably capable robot behavior, but their memory footprint makes deployment on resource-constrained robotic platforms challenging. Weight quantization is a natural remedy, yet post-training quantization (PTQ) recipes inherited from large language models degrade sharply when applied to VLAs at ultra-low precision. Two limitations become particularly important: existing low-bit PTQ methods typically assess quantization error at the layer or projection level without modeling the downstream operation through which it propagates, and allocate precision without directly measuring how reducing a layer’s precision changes the policy action. We introduce SACQ, an ultra-low-bit weight-only vector-codebook quantization framework for VLAs. SACQ combines (1) <strong>structure-aware codebook fitting</strong>, which fits each layer using a role-specific quadratic metric derived from the operation its projection feeds; (2) <strong>action-aware mixed-bit allocation</strong>, which assigns precision according to decoded-action degradation as individual layers are compressed; and (3) <strong>two-stage post-quantization refinement</strong>, which first reassigns codeword indices with second-order error compensation and then calibrates codebooks and row-group scales against the decoded action. On GR00T N1.7, SACQ retains 93.85% average success across all four LIBERO suites at approximately 1.5 bits per language/action weight, only 0.25 percentage points below the 94.10% BF16 reference, while reducing resident model memory from 5.677 GB to 1.175 GB, a 4.83× reduction. On SimplER Google Robot, at approximately 2 bits per language/action weight, SACQ achieves 63.76% and 52.27% success under Visual Matching and Variant Aggregation, respectively, compared with 58.90% and 53.45% for BF16.</p>
+      </div>
+    </section>
+
+    <section class="section container" id="motivation" aria-labelledby="motivation-title">
+      <div class="section-heading"><p class="eyebrow">Motivation</p><h2 id="motivation-title">Which quantization errors matter for action?</h2></div>
+      <p class="section-intro reading-width">Ultra-low-bit quantization creates a tight error budget. Preserving a robot policy requires understanding both where a weight error propagates and how a precision change affects the final action.</p>
+      <div class="motivation-grid">
+        <article>
+          <span class="question-number" aria-hidden="true">01</span>
+          <h3>The projection’s role matters.</h3>
+          <p>A query error perturbs attention logits. A gate error passes through a nonlinearity and interacts with the up projection. Similar projection-output errors can therefore produce different downstream distortions.</p>
+          <p class="answer"><span>SACQ</span> fits codebooks with role-specific metrics derived from those downstream operations.</p>
+        </article>
+        <article>
+          <span class="question-number" aria-hidden="true">02</span>
+          <h3>The decoded action matters.</h3>
+          <p>A layer that looks insensitive under a local reconstruction objective can still change the final action. Local error alone does not determine where a VLA can safely lose precision.</p>
+          <p class="answer"><span>SACQ</span> measures action-error changes when each layer moves to a lower-precision state.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section container method-section" id="method" aria-labelledby="method-title">
+      <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-title">Fit the codebooks. Allocate the bits. Refine the policy.</h2></div>
+      <p class="section-intro reading-width">SACQ represents normalized 4D weight vectors with shared codebooks, discrete indices, and row-group scales. Its three components connect the local structure of each projection to the action produced by the full policy.</p>
+      <figure class="method-overview">
+        <a class="figure-link" href="assets/method-overview.png" target="_blank" rel="noopener" aria-label="Open the full-size SACQ method overview">
+          <img src="assets/method-overview.png" width="4890" height="1873" loading="lazy" alt="SACQ overview: quantize the GR00T language backbone and DiT action head using structure-aware codebook fitting, allocate layer precision using decoded-action sensitivity, then reassign indices and calibrate codebooks and scales.">
+        </a>
+        <figcaption>Overview of SACQ on GR00T N1.7. The language backbone and DiT action head contain 112 and 226 candidate linear layers, respectively. The refinement stage updates discrete indices first, then codebooks and scales.</figcaption>
+      </figure>
+      <div class="method-steps">
+        <article class="method-step" aria-labelledby="fitting-title">
+          <div class="step-marker step-blue" aria-hidden="true">1</div>
+          <div class="step-content">
+            <h3 id="fitting-title">Structure-aware codebook fitting</h3>
+            <p>Instead of treating every projection-output error alike, SACQ constructs a quadratic metric from the downstream operation that consumes the projection. For query and key projections, the metric targets attention-logit distortion. Value projections account for attention weighting and the output projection; feed-forward metrics reflect nonlinear sensitivities and the downstream projection.</p>
+            <p>The resulting role-specific metric guides both codeword assignment and codeword updates. A separable approximation makes fitting practical, retaining local input correlations where used and output-channel importance. The DiT action head follows the same principle with metrics for cross-attention, GELU feed-forward layers, and AdaLN modulation.</p>
+            <div class="equation" aria-label="Minimize the sum of metric-weighted reconstruction errors">min<sub>C,a</sub> ∑<sub>v</sub> (v − c<sub>a(v)</sub>)<sup>T</sup> G(v) (v − c<sub>a(v)</sub>)</div>
+            <figure class="mobile-method-panel"><svg viewBox="805 0 1490 1873" role="img" aria-label="Structure-aware codebook fitting panel"><image href="assets/method-overview.png" width="4890" height="1873"/></svg></figure>
+          </div>
+        </article>
+        <article class="method-step" aria-labelledby="allocation-title">
+          <div class="step-marker step-green" aria-hidden="true">2</div>
+          <div class="step-content">
+            <h3 id="allocation-title">Action-aware mixed-bit allocation</h3>
+            <p>Each candidate layer can move through progressively lower-precision states, from GPTQ4 and GPTQ3 to vector-codebook states. SACQ measures the increase in relative decoded-action error caused by a one-step precision reduction, using actual policy outputs on calibration data.</p>
+            <p>At each greedy step, it first chooses the language or action component with the higher calculated bits per weight, then lowers the layer with the smallest action-error increase per bit saved. Storage accounting includes codebooks, indices, and scales; sensitivities are refreshed periodically as the allocation changes.</p>
+            <div class="equation" aria-label="Allocation score equals the increase in action error divided by bits saved">Score<sub>ℓ</sub> = Δ action error<sub>ℓ</sub> / bits saved<sub>ℓ</sub></div>
+            <figure class="mobile-method-panel"><svg viewBox="2410 0 1120 1873" role="img" aria-label="Action-aware mixed-bit allocation panel"><image href="assets/method-overview.png" width="4890" height="1873"/></svg></figure>
+          </div>
+        </article>
+        <article class="method-step" aria-labelledby="refinement-title">
+          <div class="step-marker step-orange" aria-hidden="true">3</div>
+          <div class="step-content">
+            <h3 id="refinement-title">Two-stage post-quantization refinement</h3>
+            <div class="refinement-stages">
+              <div><h4>First, reassign the indices.</h4><p>With codebooks, scales, and bit allocation fixed, SACQ uses second-order input statistics from the quantized policy to reassign indices against the original BF16 weights. Sequential error compensation lets later vectors absorb errors from preceding assignments.</p></div>
+              <div><h4>Then, calibrate the actions.</h4><p>With the updated indices fixed, SACQ optimizes only codebooks and row-group scales to match the BF16 policy’s decoded actions. This directly refines action fidelity while preserving the storage rate.</p></div>
+            </div>
+            <figure class="mobile-method-panel"><svg viewBox="3590 0 1280 1873" role="img" aria-label="Index reassignment and action-level calibration panel"><image href="assets/method-overview.png" width="4890" height="1873"/></svg></figure>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section container results-section" id="results" aria-labelledby="results-title">
+      <div class="section-heading"><p class="eyebrow">Experiments</p><h2 id="results-title">Strong policy performance at ultra-low precision.</h2></div>
+      <p class="section-intro reading-width">We evaluate task success in simulation on LIBERO and SimplER Google Robot. All GR00T comparisons use the same language/action candidate scope and BF16 activations.</p>
+
+      <article class="result-block" aria-labelledby="libero-title">
+        <div class="result-heading"><div><p class="result-label">GR00T N1.7 · LIBERO</p><h3 id="libero-title">Near-BF16 success at ~1.5 L/A bpw</h3></div><span class="source-label">Paper · Table 1</span></div>
+        <p>At approximately 1.5 bpw, SACQ achieves <strong>93.85%</strong> average success, compared with <strong>30.05%</strong> for the evaluated ActQuant variant and <strong>31.95%</strong> for GPTQ-Ternary. At approximately 2 bpw, SACQ reaches <strong>94.25%</strong>.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="LIBERO success and memory results, horizontally scrollable">
+          <table class="results-table libero-table">
+            <caption>Success rates (%) across four LIBERO suites. 500 episodes per suite, 2,000 per configuration.</caption>
+            <thead><tr><th scope="col">Method</th><th scope="col">L/A bpw</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Avg.</th><th scope="col">Memory (GB)</th></tr></thead>
+            <tbody>
+              <tr class="baseline"><th scope="row">BF16</th><td>16.0000</td><td>94.2</td><td>97.6</td><td>95.2</td><td>89.4</td><td>94.10</td><td>5.677</td></tr>
+              <tr class="budget-start"><th scope="row">HQQ</th><td>3.0000</td><td>75.0</td><td>93.6</td><td>76.4</td><td>73.8</td><td>79.70</td><td>1.660</td></tr>
+              <tr><th scope="row">GPTQ</th><td>3.0000</td><td>95.2</td><td>97.4</td><td>96.6</td><td>85.6</td><td>93.70</td><td>1.982</td></tr>
+              <tr><th scope="row">ActQuant</th><td>3.0011</td><td>94.8</td><td>96.2</td><td>96.4</td><td>90.4</td><td>94.45</td><td>1.562</td></tr>
+              <tr class="ours"><th scope="row">SACQ-3b</th><td>2.9990</td><td>94.8</td><td>96.8</td><td>96.6</td><td>88.2</td><td>94.10</td><td>1.902</td></tr>
+              <tr class="budget-start"><th scope="row">HQQ</th><td>2.0000</td><td>0.0</td><td>0.0</td><td>0.4</td><td>0.0</td><td>0.10</td><td>1.368</td></tr>
+              <tr><th scope="row">GPTQ</th><td>2.0000</td><td>57.2</td><td>90.2</td><td>49.8</td><td>60.2</td><td>64.35</td><td>1.528</td></tr>
+              <tr><th scope="row">ActQuant</th><td>2.0006</td><td>92.2</td><td>96.6</td><td>88.6</td><td>67.8</td><td>86.30</td><td>1.306</td></tr>
+              <tr><th scope="row">TWLA-compatible<sup>†</sup></th><td>2.0489</td><td>93.6</td><td>97.4</td><td>96.4</td><td>84.8</td><td>93.05</td><td>2.772</td></tr>
+              <tr class="ours"><th scope="row">SACQ-2b</th><td>1.9997</td><td>93.8</td><td>96.6</td><td>97.0</td><td>89.6</td><td>94.25</td><td>1.310</td></tr>
+              <tr class="budget-start"><th scope="row">GPTQ-Ternary<sup>‡</sup></th><td>1.5850</td><td>39.4</td><td>44.4</td><td>10.6</td><td>33.4</td><td>31.95</td><td>1.337</td></tr>
+              <tr><th scope="row">ActQuant</th><td>1.4986</td><td>48.4</td><td>35.4</td><td>26.6</td><td>9.8</td><td>30.05</td><td>1.169</td></tr>
+              <tr class="ours featured"><th scope="row">SACQ-1.5b</th><td>1.4998</td><td>93.2</td><td>97.0</td><td>96.2</td><td>89.0</td><td>93.85</td><td>1.175</td></tr>
+              <tr class="ours budget-start"><th scope="row">SACQ-1.25b</th><td>1.2487</td><td>92.0</td><td>96.8</td><td>94.4</td><td>87.6</td><td>92.70</td><td>1.114</td></tr>
+              <tr class="ours"><th scope="row">SACQ-1b</th><td>1.0000</td><td>86.8</td><td>93.6</td><td>86.2</td><td>65.6</td><td>83.05</td><td>1.069</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-notes"><p>L/A bpw excludes quantization metadata; memory covers the full loaded policy. Shading identifies SACQ rows, with the 1.5-bpw operating point emphasized.</p><p><sup>†</sup> TWLA-compatible is a PyTorch VLA port that does not reproduce all storage/runtime optimizations of the original implementation. <sup>‡</sup> GPTQ-Ternary is our custom symmetric ternary extension. ActQuant’s allocation and scale optimization are applied to the same GR00T candidate layers, including its DiT action head.</p></div>
+      </article>
+
+      <article class="result-block" aria-labelledby="simpler-title">
+        <div class="result-heading"><div><p class="result-label">GR00T N1.7 · SimplER Google Robot</p><h3 id="simpler-title">Strong performance under both evaluation protocols</h3></div><span class="source-label">Paper · Table 2</span></div>
+        <p>At approximately 2 L/A bpw, SACQ achieves <strong>63.76%</strong> success under Visual Matching and <strong>52.27%</strong> under Variant Aggregation, compared with BF16 references of 58.90% and 53.45%. Reducing precision further to ~1.5 bpw decreases success to 57.20% and 44.67%.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="SimplER average success results, horizontally scrollable">
+          <table class="results-table compact-table">
+            <caption>Average success (%) on Visual Matching (VM) and Variant Aggregation (VA).</caption>
+            <thead><tr><th scope="col">Method</th><th scope="col">L/A bpw</th><th scope="col">VM</th><th scope="col">VA</th><th scope="col">Memory (GB)</th></tr></thead>
+            <tbody>
+              <tr class="baseline"><th scope="row">BF16</th><td>16.0000</td><td>58.90</td><td>53.45</td><td>5.677</td></tr>
+              <tr><th scope="row">GPTQ</th><td>2.0000</td><td>25.57</td><td>23.25</td><td>1.524</td></tr>
+              <tr><th scope="row">ActQuant</th><td>1.9998</td><td>46.61</td><td>38.70</td><td>1.331</td></tr>
+              <tr><th scope="row">TWLA-compatible</th><td>2.0635</td><td>52.68</td><td>48.16</td><td>2.782</td></tr>
+              <tr class="ours featured"><th scope="row">SACQ-2b</th><td>1.9995</td><td>63.76</td><td>52.27</td><td>1.342</td></tr>
+              <tr class="ours"><th scope="row">SACQ-1.5b</th><td>1.4999</td><td>57.20</td><td>44.67</td><td>1.191</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-notes">VM and VA cover four task categories: Pick, Move, Drawer, and Apple, using 864 and 1,992 evaluation conditions, respectively.</p>
+      </article>
+
+      <article class="result-block" aria-labelledby="ablation-title">
+        <div class="result-heading"><div><p class="result-label">Analysis · LIBERO</p><h3 id="ablation-title">Structure-aware fitting matters more as the budget tightens</h3></div><span class="source-label">Paper · Table 3</span></div>
+        <p>At approximately 1.25 L/A bpw, structure-aware fitting improves average success from <strong>87.65% to 92.70%</strong>. The largest gain is on LIBERO-Long: <strong>73.2% → 87.6%</strong>, a 14.4-percentage-point improvement.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Structure-aware fitting ablation, horizontally scrollable">
+          <table class="results-table compact-table">
+            <caption>Structure-aware fitting ablation at approximately 1.25 L/A bpw. Allocation and refinement are enabled in both settings.</caption>
+            <thead><tr><th scope="col">Setting</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Avg.</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Without structure-aware fitting</th><td>91.8</td><td>94.4</td><td>91.2</td><td>73.2</td><td>87.65</td></tr>
+              <tr class="ours featured"><th scope="row">Full SACQ-1.25b</th><td>92.0</td><td>96.8</td><td>94.4</td><td>87.6</td><td>92.70</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <details class="additional-results">
+          <summary>Component ablation at ~1.5 L/A bpw</summary>
+          <div class="table-scroll" tabindex="0" role="region" aria-label="SACQ component ablation, horizontally scrollable">
+            <table class="results-table compact-table">
+              <caption>Average LIBERO success (%) with different SACQ components.</caption>
+              <thead><tr><th scope="col">Setting</th><th scope="col">Allocation</th><th scope="col">Structure</th><th scope="col">Refinement</th><th scope="col">Avg.</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">Uniform Euclidean VQ</th><td>—</td><td>—</td><td>—</td><td>0.00</td></tr>
+                <tr><th scope="row">+ Mixed-bit allocation</th><td>Yes</td><td>—</td><td>—</td><td>0.00</td></tr>
+                <tr><th scope="row">+ Structure-aware fitting</th><td>Yes</td><td>Yes</td><td>—</td><td>47.50</td></tr>
+                <tr class="ours featured"><th scope="row">Full SACQ-1.5b</th><td>Yes</td><td>Yes</td><td>Yes</td><td>93.85</td></tr>
+                <tr><th scope="row">Without structure (Euclidean)</th><td>Yes</td><td>—</td><td>Yes</td><td>92.60</td></tr>
+                <tr><th scope="row">Without allocation (uniform)</th><td>—</td><td>Yes</td><td>Yes</td><td>93.25</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <p class="table-notes">The paper also studies limited refinement budgets (Table 8). Structure-aware fitting is particularly helpful at smaller calibration budgets; it does not yield a higher final average at every budget.</p>
+      </article>
+
+      <details class="additional-results supplementary">
+        <summary>Additional evaluations: OpenVLA-OFT and LIBERO-Pro</summary>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Additional SACQ evaluation results, horizontally scrollable">
+          <table class="results-table compact-table">
+            <caption>Selected additional results from paper Tables 6 and 7.</caption>
+            <thead><tr><th scope="col">Model / benchmark</th><th scope="col">Setting</th><th scope="col">Quantization scope</th><th scope="col">Success (%)</th><th scope="col">BF16 (%)</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">OpenVLA-OFT / LIBERO</th><td>~2 bpw</td><td>Vision / language</td><td>94.05</td><td>95.80</td></tr>
+              <tr><th scope="row">GR00T N1.7 / LIBERO-Pro</th><td>~2 bpw</td><td>Language / action</td><td>43.62</td><td>43.67</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-notes">OpenVLA-OFT quantizes 420 vision/language linear layers and excludes the action head, so its V/L bpw is not directly comparable to GR00T’s L/A bpw. LIBERO-Pro evaluates five perturbation families over 10,000 episodes per model.</p>
+      </details>
+      <p class="scope-note"><strong>Scope.</strong> SACQ is weight-only and retains BF16 activations. The current implementation focuses on memory efficiency; optimized codebook kernels and real-robot validation remain future work.</p>
+    </section>
+
+    <section class="section citation-section" id="citation" aria-labelledby="citation-title">
+      <div class="reading-width">
+        <div class="citation-heading"><h2 id="citation-title">Citation</h2><button class="copy-button" id="copy-citation" type="button" hidden>Copy BibTeX</button></div>
+        <p class="citation-note">Publication metadata will be added when the paper is released. This citation is a placeholder.</p>
+        <!-- RELEASE: update author, year, and arXiv/venue metadata; then remove the placeholder note. -->
+        <pre tabindex="0" aria-label="Placeholder BibTeX citation"><code id="bibtex">@misc{sacq,
+  title  = {SACQ: Structure-Aware Codebook Quantization for
+            Ultra-Low-Bit Vision-Language-Action Models},
+  author = {To be announced},
+  note   = {Publication details to be announced}
+}</code></pre>
+        <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer container"><a class="wordmark" href="#top">SACQ<span class="wordmark-dot" aria-hidden="true">.</span></a><p>Structure-aware quantization for vision-language-action models.</p><a class="back-to-top" href="#top">Back to top ↑</a></footer>
+</body>
+</html>
