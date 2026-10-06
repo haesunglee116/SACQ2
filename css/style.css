@@ -60,12 +60,13 @@ sup { font-size: .72em; }
 figcaption { margin: 18px auto 0; max-width: 910px; color: #626b76; font-size: 14px; line-height: 1.75; }
 figcaption strong { color: #343d47; }
 .key-results { display: grid; grid-template-columns: repeat(3, 1fr); margin: 31px auto 19px; max-width: 940px; padding-block: 24px; border-block: 1px solid var(--line); }
-.key-results > div { display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 14px; }
+.key-results > div { display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 14px; min-width: 0; }
 .key-results > div + div { border-left: 1px solid var(--line); }
 .key-results dt { font-size: 11px; letter-spacing: .03em; font-weight: 550; color: var(--muted); order: 1; }
-.key-results dd { margin-block: 5px 2px; font-size: 41px; line-height: 1.2; font-weight: 650; letter-spacing: -.05em; font-variant-numeric: tabular-nums; order: 2; }
-.key-results dd span { font-size: 23px; font-weight: 500; letter-spacing: -.02em; }
-.key-results p { font-size: 11px; color: var(--muted); margin: 4px 0 0; order: 3; }
+.key-results dd { width: 100%; margin-block: 5px 2px; order: 2; }
+.key-results .metric-value { display: block; font-size: 41px; line-height: 1.2; font-weight: 650; letter-spacing: -.05em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.key-results .metric-unit { font-size: 23px; font-weight: 500; letter-spacing: -.02em; }
+.key-results .metric-note { font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1.65; color: #59636f; margin: 8px 0 0; white-space: normal; }
 details { color: var(--muted); }
 summary { cursor: pointer; font-size: 13px; font-weight: 550; width: fit-content; }
 summary:hover { color: var(--accent); }
@@ -178,10 +179,10 @@ code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
   figcaption { font-size: 12px; margin-top: 14px; }
   .key-results { margin-top: 23px; padding-block: 18px; gap: 0; }
   .key-results > div { padding-inline: 7px; }
-  .key-results dt { font-size: 9px; line-height: 1.5; max-width: 100px; }
-  .key-results dd { font-size: 27px; white-space: nowrap; }
-  .key-results dd span { font-size: 14px; }
-  .key-results p { font-size: 8px; max-width: 100px; line-height: 1.6; }
+  .key-results dt { font-size: 10px; line-height: 1.5; max-width: 100px; }
+  .key-results .metric-value { font-size: 27px; }
+  .key-results .metric-unit { font-size: 14px; }
+  .key-results .metric-note { font-size: 11px; max-width: 110px; line-height: 1.65; }
   .figure-notes { font-size: 11px; }
   .figure-notes summary { font-size: 11px; }
   .section { padding-block: 46px; }
