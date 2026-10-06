@@ -55,7 +55,7 @@ If a remote repository already contains files, inspect and integrate its history
 
 ## Before public release
 
-1. Replace author and affiliation placeholders with approved metadata.
+1. Verify the author list, KAIST affiliation, and corresponding-author marker against the released paper.
 2. Replace disabled Paper/Code buttons with the actual public links.
 3. Replace the placeholder BibTeX with the final citation.
 4. Remove `<meta name="robots" content="noindex, nofollow">` when indexing is wanted. This metadata is not access control; repository/site privacy is a separate setting.

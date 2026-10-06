@@ -2,6 +2,8 @@
 
 Source of truth: `SACQ__Structure_Aware_Codebook_Quantization_for_Ultra_Low_Bit_Vision_Language_Action_Models.pdf`, 18 pages, supplied in the parent research directory. This is an anonymous ICLR 2027 review manuscript. The source PDF is not copied into this site.
 
+Author metadata comes from the updated manuscript screenshot supplied by the user on 2026-10-07: Haesung Lee and Insu Han, both affiliated with KAIST; Insu Han is the corresponding author. This metadata is also used in the placeholder BibTeX.
+
 ## Manuscript mapping
 
 | Page content | Source |
@@ -37,7 +39,7 @@ The CSV success values (15 entries) and memory values (6 entries) were checked a
 - Comparisons use the variants evaluated in the SACQ manuscript. Values are not imported from other papers’ project pages.
 - No runtime speedup or physical-robot validation is claimed.
 - Refinement optimizes codebooks/scales on calibration data, so SACQ is not described as training-free.
-- No accepted venue, publication year, author list, arXiv identifier, or public code URL has been invented.
+- No accepted venue, publication year, arXiv identifier, or public code URL has been invented.
 
 ## Design references
 
