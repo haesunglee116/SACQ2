@@ -62,7 +62,7 @@ Desktop shows the full method overview; phones show one panel per stage using SV
 ## Hosting
 
 The page is served by GitHub Pages from the `main` branch (root) of this repository at
-<https://haesunglee116.github.io/sacq-project-page/>. The repository name is part of
+<https://haesunglee116.github.io/SACQ2/>. The repository name is part of
 the URL, so do not rename the repository after the address has been published in the paper.
 Social previews use `assets/social-card.png` through the Open Graph and Twitter meta tags in
 `index.html`; those tags carry the absolute site URL.
