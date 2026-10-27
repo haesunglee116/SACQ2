@@ -59,18 +59,18 @@ Prose, captions, and the method section are edited directly in `index.html`.
 
 Desktop shows the full method overview; phones show one panel per stage using SVG viewports into the same bitmap. Charts re-render on container resize. Tables scroll horizontally within their own region with the first column pinned.
 
-## GitHub repository and hosting
+## Hosting
 
-Keep the repository **private** during preparation. GitHub Pages is not configured and no deployment workflow is included; hosting is decided at release time together with the paper. Note that the default Pages URL is `https://<owner>.github.io/<repository>/`, so the repository name (or a `gh-pages` branch of the code repository) determines the final address.
+The page is served by GitHub Pages from the `main` branch (root) of this repository at
+<https://haesunglee116.github.io/sacq-project-page/>. The repository name is part of
+the URL, so do not rename the repository after the address has been published in the paper.
+Social previews use `assets/social-card.png` through the Open Graph and Twitter meta tags in
+`index.html`; those tags carry the absolute site URL.
 
-## Before public release
+## Remaining release steps
 
-1. Verify the author list, affiliation, and corresponding-author marker against the released paper.
-2. Point the Paper button at the arXiv abstract page (`index.html`, `RELEASE` comment in the hero).
-3. Make the code repository public, or adjust the Code button.
-4. Replace the placeholder BibTeX with the final citation.
-5. Replace `assets/method-overview.png` with the final Figure 2 export if the manuscript figure changed.
-6. Remove `<meta name="robots" content="noindex, nofollow">` when indexing is wanted. This metadata is not access control; repository/site privacy is a separate setting.
-7. Re-check all numbers in `data/paper_tables.json` against the released paper and rerun the build.
+1. Point the Paper button at the arXiv abstract page (`index.html`, `RELEASE` comment in the hero) and replace the placeholder BibTeX with the arXiv record.
+2. When the code repository becomes public, re-enable the Code button (`RELEASE` comment in the hero).
+3. Replace `assets/method-overview.*` and the panel SVGs if the manuscript figures change, and re-check `data/paper_tables.json` against the released paper (then run the build).
 
-The unreleased manuscript PDF, drafts, and rollout videos are not included in this repository.
+The unreleased manuscript, drafts, and rollout videos are not included in this repository.

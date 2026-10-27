@@ -6,8 +6,18 @@
   <meta name="description" content="SACQ: Structure-Aware Codebook Quantization for Ultra-Low-Bit Vision-Language-Action Models. On GR00T N1.7, 93.85% average LIBERO success at 1.5 language/action bits per weight with a 4.83x memory reduction.">
   <meta name="author" content="Haesung Lee, Insu Han">
   <meta name="theme-color" content="#ffffff">
-  <!-- RELEASE: remove noindex when the page goes public. -->
-  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://haesunglee116.github.io/sacq-project-page/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://haesunglee116.github.io/sacq-project-page/">
+  <meta property="og:title" content="SACQ: Structure-Aware Codebook Quantization for Ultra-Low-Bit Vision-Language-Action Models">
+  <meta property="og:description" content="On GR00T N1.7, SACQ keeps 93.85% average LIBERO success at 1.5 language/action bits per weight, 0.25 points from BF16, while cutting resident model memory 4.83x.">
+  <meta property="og:image" content="https://haesunglee116.github.io/sacq-project-page/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SACQ: Structure-Aware Codebook Quantization for Ultra-Low-Bit VLA Models">
+  <meta name="twitter:description" content="93.85% average LIBERO success on GR00T N1.7 at 1.5 language/action bits per weight, with a 4.83x smaller resident memory footprint.">
+  <meta name="twitter:image" content="https://haesunglee116.github.io/sacq-project-page/assets/social-card.png">
   <title>SACQ | Structure-Aware Codebook Quantization for VLA Models</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css?v=20261028c">
@@ -44,11 +54,12 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/></svg>
           Paper <span class="button-note">arXiv soon</span>
         </button>
-        <!-- RELEASE: the repository is private until the public release. -->
-        <a class="resource-button" href="https://github.com/haesunglee116/SACQ" rel="noopener">
+        <!-- RELEASE: when https://github.com/haesunglee116/SACQ is public, replace this button with
+             <a class="resource-button" href="https://github.com/haesunglee116/SACQ" rel="noopener">...Code</a> -->
+        <button class="resource-button" type="button" disabled aria-label="Code, not yet available">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-14-2 18"/></svg>
-          Code
-        </a>
+          Code <span class="button-note">Coming soon</span>
+        </button>
         <a class="resource-button" href="#citation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 7h10M7 12h10M7 17h6"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
           BibTeX
