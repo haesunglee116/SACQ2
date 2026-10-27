@@ -113,23 +113,23 @@
 
     <!-- ───────────────────────── Motivation ───────────────────────── -->
     <section class="section container" id="motivation" aria-labelledby="motivation-title">
-      <div class="section-heading"><p class="eyebrow">Motivation</p><h2 id="motivation-title">Where a weight error lands decides what it costs.</h2></div>
+      <div class="section-heading"><h2 id="motivation-title">Motivation</h2></div>
       <div class="motivation-grid">
         <article class="motivation-card">
           <p class="card-index">01</p>
-          <h3>The projection’s role matters.</h3>
+          <h3>Downstream operation of each projection</h3>
           <p>Errors in query and key projections perturb the attention logits that determine token mixing. Errors in feed-forward projections alter the hidden representations passed to subsequent operations. Similar layer-local reconstruction errors can therefore have substantially different consequences depending on where they occur.</p>
           <p class="card-answer">SACQ fits each codebook with a metric derived from the downstream computation that consumes the projection output.</p>
         </article>
         <article class="motivation-card">
           <p class="card-index">02</p>
-          <h3>The decoded action matters.</h3>
+          <h3>Effect on the decoded action</h3>
           <p>A layer that appears insensitive under a local reconstruction objective can still have a large effect on the final action. Layer-local error alone does not determine where a VLA can safely lose precision.</p>
           <p class="card-answer">SACQ allocates precision by actually running the policy with each layer one state lower and measuring the change in decoded-action error.</p>
         </article>
         <article class="motivation-card">
           <p class="card-index">03</p>
-          <h3>Independent fitting leaves interactions on the table.</h3>
+          <h3>Cross-vector error interactions</h3>
           <p>Fitting codebooks one weight vector at a time keeps the problem tractable, but drops cross-vector error interactions and never sees the full policy.</p>
           <p class="card-answer">Two-stage refinement reassigns indices with second-order compensation, then calibrates codebooks and scales against the BF16 action with the storage rate fixed.</p>
         </article>
@@ -138,7 +138,7 @@
 
     <!-- ───────────────────────── Method ───────────────────────── -->
     <section class="section container method-section" id="method" aria-labelledby="method-title">
-      <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-title">Fit the codebooks. Allocate the bits. Refine the policy.</h2></div>
+      <div class="section-heading"><h2 id="method-title">Method</h2></div>
       <p class="section-lead">SACQ uses a block-scaled vector-codebook representation: weights are split into row groups of <var>g</var> = 64 entries normalized by their own scale, grouped into <var>d</var> = 4-dimensional vectors, and each vector stores one index into a single per-layer codebook. Its three components connect the local structure of each projection to the action produced by the full policy.</p>
 
       <figure class="method-overview">
@@ -274,11 +274,11 @@
 
     <!-- ───────────────────────── Results ───────────────────────── -->
     <section class="section container results-section" id="results" aria-labelledby="results-title">
-      <div class="section-heading"><p class="eyebrow">Experiments</p><h2 id="results-title">Near-BF16 policies at 1.5 to 2 bits.</h2></div>
+      <div class="section-heading"><h2 id="results-title">Experiments</h2></div>
       <p class="section-lead">We quantize 338 linear layers of GR00T N1.7 (112 in the language backbone, 226 in the DiT action head) and compare against HQQ, GPTQ, ActQuant, TWLA, and AQLM under the same language/action scope. Methods that require calibration use the same calibration data as SACQ while following their own quantization and optimization procedures. Evaluation uses the four LIBERO suites (500 episodes each, environment seed 17) and the SimplER Google Robot Visual Matching and Variant Aggregation protocols (seed 7).</p>
 
       <article class="result-block" aria-labelledby="libero-title">
-        <div class="result-heading"><div><p class="result-label">GR00T N1.7 · LIBERO</p><h3 id="libero-title">93.85% at 1.5 L/A bpw, 94.25% at 2 L/A bpw</h3></div><span class="source-label">Paper · Table 1</span></div>
+        <div class="result-heading"><div><h3 id="libero-title">GR00T N1.7 on LIBERO</h3></div><span class="source-label">Paper · Table 1</span></div>
         <p>SACQ achieves 93.85% average success at 1.4998 L/A bpw, only 0.25 percentage points below the 94.10% BF16 reference, and reaches 94.25% and 94.10% at 2 and 3 bpw. For comparison, TWLA and AQLM reach 93.05% and 83.60% at 2 bpw, AQLM reaches 87.50% at 1.5 bpw, and ActQuant and GPTQ-Ternary fall to 30.05% and 31.95% there. At 1.4998 L/A bpw, resident model memory drops from 5.677 GB to 1.175 GB.</p>
         <!-- BUILD:table1 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="LIBERO results, horizontally scrollable">
@@ -317,7 +317,7 @@
       </article>
 
       <article class="result-block" aria-labelledby="simpler-title">
-        <div class="result-heading"><div><p class="result-label">GR00T N1.7 · SimplER Google Robot</p><h3 id="simpler-title">Above BF16 on Visual Matching, on par for Variant Aggregation</h3></div><span class="source-label">Paper · Table 2</span></div>
+        <div class="result-heading"><div><h3 id="simpler-title">GR00T N1.7 on SimplER Google Robot</h3></div><span class="source-label">Paper · Table 2</span></div>
         <p>At 2 L/A bpw, SACQ achieves 63.76% on VM and 52.27% on VA, compared with BF16 references of 58.90% and 53.45%, and exceeds every evaluated quantized baseline under both protocols. Reducing SACQ to 1.4999 L/A bpw gives 57.20% on VM and 44.67% on VA.</p>
         <div class="tab-strip" role="tablist" aria-label="SimplER protocol">
           <button class="tab" role="tab" id="tab-vm" aria-selected="true" aria-controls="panel-vm" type="button">Visual Matching</button>
@@ -367,10 +367,10 @@
 
     <!-- ───────────────────────── Analysis ───────────────────────── -->
     <section class="section container analysis-section" id="analysis" aria-labelledby="analysis-title">
-      <div class="section-heading"><p class="eyebrow">Analysis</p><h2 id="analysis-title">What each component buys, and when structure matters most.</h2></div>
+      <div class="section-heading"><h2 id="analysis-title">Analysis</h2></div>
 
       <article class="result-block" aria-labelledby="ablation-title">
-        <div class="result-heading"><div><p class="result-label">Component ablation · LIBERO</p><h3 id="ablation-title">Structure-aware fitting is what makes 1.5 bits recoverable</h3></div><span class="source-label">Paper · Table 3</span></div>
+        <div class="result-heading"><div><h3 id="ablation-title">Component ablation on LIBERO</h3></div><span class="source-label">Paper · Table 3</span></div>
         <p>At 1.5 L/A bpw, Euclidean VQ with mixed-bit allocation fails to preserve the policy entirely, whereas structure-aware fitting raises the pre-refinement average to 47.50%. Refinement then recovers the full model to 93.85%. Removing structure-aware fitting or mixed-bit allocation from the full pipeline lowers the final success to 92.60% and 93.25%. The effect grows under more aggressive compression: at 1.25 L/A bpw, structure-aware fitting lifts the average from 87.65% to <strong>92.70%</strong>, with LIBERO-Long improving from 73.2% to <strong>87.6%</strong>.</p>
         <!-- BUILD:table3 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="Component ablation, horizontally scrollable">
@@ -396,7 +396,7 @@
       </article>
 
       <article class="result-block" aria-labelledby="budget-title">
-        <div class="result-heading"><div><p class="result-label">Limited refinement · LIBERO · 1.5 L/A bpw</p><h3 id="budget-title">A stronger starting point when calibration data is scarce</h3></div><span class="source-label">Paper · Table 8</span></div>
+        <div class="result-heading"><div><h3 id="budget-title">Structure-aware fitting under limited refinement</h3></div><span class="source-label">Paper · Table 8</span></div>
         <p>With the mixed-bit allocation fixed and refinement held at 12 epochs, three codebook-fitting objectives are compared as the calibration data per suite shrinks from the full 2,880 observations to 90. With 90 observations, structure-aware fitting reaches 84.15% average success versus 74.55% for layer-local reconstruction and 39.75% for Euclidean fitting. The gap narrows as data grows, and at the full budget structure-aware fitting recovers LIBERO-Long to 89.0%, closest to the 89.4% BF16 reference.</p>
         <div class="chart-controls" role="group" aria-label="Suite shown in the chart">
           <span class="control-label">Suite</span>
@@ -447,7 +447,7 @@
       </article>
 
       <article class="result-block" aria-labelledby="beyond-title">
-        <div class="result-heading"><div><p class="result-label">Beyond the main setting</p><h3 id="beyond-title">Another architecture, and perturbed tasks</h3></div><span class="source-label">Paper · Tables 6 and 7</span></div>
+        <div class="result-heading"><div><h3 id="beyond-title">OpenVLA-OFT and LIBERO-Pro</h3></div><span class="source-label">Paper · Tables 6 and 7</span></div>
         <p><strong>OpenVLA-OFT on LIBERO.</strong> Applying SACQ to a different VLA architecture, where the quantization scope covers 420 vision and language linear layers and excludes the MLP action head, gives 95.55% average success at 3 V/L bpw and 94.05% at 2 V/L bpw against a 95.80% BF16 reference. V/L bpw is not directly comparable to GR00T’s L/A bpw.</p>
         <!-- BUILD:table6 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="OpenVLA-OFT results, horizontally scrollable">
