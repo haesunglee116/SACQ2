@@ -254,6 +254,7 @@ math { font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Noto 
 .copy-button:hover { background: var(--line-2); }
 .copy-button.copied { color: #0f7a3a; border-color: #bfe3cd; }
 .citation-note { font-size: 13.5px; color: var(--muted); }
+.placeholder-badge { display: inline-block; vertical-align: 1px; margin-right: 8px; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; color: #7a4f00; background: #fff3d1; border: 1px solid #efd48c; }
 .bibtex { margin: 0; padding: 16px 18px; background: #fff; border: 1px solid var(--line); border-radius: 10px; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; overflow-x: auto; color: var(--ink); white-space: pre; }
 .site-footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 13.5px; color: var(--muted); }
 .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
