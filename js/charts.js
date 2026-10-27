@@ -154,20 +154,13 @@
         hits.push({ node: hit, series: spec, point: p });
       });
     });
-    // Direct labels: the SACQ-1.5b operating point, and the two gray context series.
-    // The label sits below-left of the point with a leader line; the region left
-    // of 1.5 bpw and below the SACQ line is empty (AQLM, ActQuant, GPTQ start at >= 1.5).
+    // Single direct label, as in the paper figure: the SACQ-1.5b operating point.
+    // It sits below-left of the point with a leader line; the region left of
+    // 1.5 bpw and below the SACQ line is empty (the baselines start at >= 1.5).
+    // Every other series is identified by the legend (color + marker) and the tooltip.
     var lx = x(1.5), ly = y(93.85);
     text(svg, lx - 30, ly + 48, "93.85%", { "text-anchor": "middle", "class": "direct-label" });
     el("line", { x1: lx - 3, x2: lx - 24, y1: ly + 8, y2: ly + 35, stroke: "var(--chart-axis)", "stroke-width": 1 }, svg);
-    DATA.success.series.forEach(function (s) {
-      var spec = SERIES[s.key];
-      if (!spec.context) return;
-      var last = s.points[s.points.length - 1];
-      // TWLA sits between the SACQ and ActQuant lines; below-left is the clear quadrant.
-      if (s.key === "twla") text(svg, x(last[0]) - 9, y(last[1]) + 18, spec.label, { "text-anchor": "end", "class": "direct-label muted" });
-      else text(svg, x(last[0]) - 10, y(last[1]) + 4, spec.label, { "text-anchor": "end", "class": "direct-label muted" });
-    });
 
     hits.forEach(function (h) {
       function show(e) {
