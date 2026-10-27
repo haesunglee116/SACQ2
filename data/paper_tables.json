@@ -1,0 +1,168 @@
+{
+  "_provenance": "All values transcribed from the SACQ preprint (main_arxiv.tex, 2026-10-27). Tables are keyed by their paper table number. Do not edit numbers here without a matching change in the manuscript.",
+  "bf16": {
+    "libero": {"spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "memory_gb": 5.677},
+    "simpler_vm": {"pick": 86.00, "move": 91.25, "drawer": 45.37, "apple": 12.96, "avg": 58.90, "memory_gb": 5.677},
+    "simpler_va": {"pick": 83.27, "move": 81.83, "drawer": 21.69, "apple": 26.98, "avg": 53.45, "memory_gb": 5.677}
+  },
+  "table1_libero": {
+    "caption": "Comparison of SACQ with existing quantization methods on GR00T N1.7 across the four LIBERO suites. Success rates (%) against HQQ, GPTQ, ActQuant, and TWLA at comparable language/action bit budgets. L/A bpw is the parameter-weighted average bits per weight over the 338 language-backbone and action-head candidate layers.",
+    "columns": ["Method", "L/A bpw", "Spatial", "Object", "Goal", "Long", "Avg.", "Memory (GB)"],
+    "groups": [
+      {"label": null, "rows": [
+        {"method": "BF16", "bpw": "16.0000", "spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "memory": 5.677, "ref": true}
+      ]},
+      {"label": "~3 bpw", "rows": [
+        {"method": "HQQ", "bpw": "3.0000", "spatial": 75.0, "object": 93.6, "goal": 76.4, "long": 73.8, "avg": 79.70, "memory": 1.660},
+        {"method": "GPTQ", "bpw": "3.0000", "spatial": 95.2, "object": 97.4, "goal": 96.6, "long": 85.6, "avg": 93.70, "memory": 1.982},
+        {"method": "ActQuant", "bpw": "3.0011", "spatial": 94.8, "object": 96.2, "goal": 96.4, "long": 90.4, "avg": 94.45, "memory": 1.562},
+        {"method": "SACQ-3b", "bpw": "2.9990", "spatial": 94.8, "object": 96.8, "goal": 96.6, "long": 88.2, "avg": 94.10, "memory": 1.902, "ours": true}
+      ]},
+      {"label": "~2 bpw", "rows": [
+        {"method": "HQQ", "bpw": "2.0000", "spatial": 0.0, "object": 0.0, "goal": 0.4, "long": 0.0, "avg": 0.10, "memory": 1.368},
+        {"method": "GPTQ", "bpw": "2.0000", "spatial": 57.2, "object": 90.2, "goal": 49.8, "long": 60.2, "avg": 64.35, "memory": 1.528},
+        {"method": "ActQuant", "bpw": "2.0006", "spatial": 92.2, "object": 96.6, "goal": 88.6, "long": 67.8, "avg": 86.30, "memory": 1.306},
+        {"method": "TWLA", "bpw": "2.0489", "spatial": 93.6, "object": 97.4, "goal": 96.4, "long": 84.8, "avg": 93.05, "memory": 2.772, "note": "twla"},
+        {"method": "SACQ-2b", "bpw": "1.9997", "spatial": 93.8, "object": 96.6, "goal": 97.0, "long": 89.6, "avg": 94.25, "memory": 1.310, "ours": true}
+      ]},
+      {"label": "~1.5 bpw", "rows": [
+        {"method": "GPTQ-Ternary", "bpw": "1.5850", "spatial": 39.4, "object": 44.4, "goal": 10.6, "long": 33.4, "avg": 31.95, "memory": 1.337, "note": "ternary"},
+        {"method": "ActQuant", "bpw": "1.4986", "spatial": 48.4, "object": 35.4, "goal": 26.6, "long": 9.8, "avg": 30.05, "memory": 1.169},
+        {"method": "SACQ-1.5b", "bpw": "1.4998", "spatial": 93.2, "object": 97.0, "goal": 96.2, "long": 89.0, "avg": 93.85, "memory": 1.175, "ours": true, "featured": true}
+      ]},
+      {"label": "~1.25 bpw", "rows": [
+        {"method": "SACQ-1.25b", "bpw": "1.2487", "spatial": 92.0, "object": 96.8, "goal": 94.4, "long": 87.6, "avg": 92.70, "memory": 1.114, "ours": true}
+      ]},
+      {"label": "~1 bpw", "rows": [
+        {"method": "SACQ-1b", "bpw": "1.0000", "spatial": 86.8, "object": 93.6, "goal": 86.2, "long": 65.6, "avg": 83.05, "memory": 1.069, "ours": true}
+      ]}
+    ]
+  },
+  "figure1a_success_vs_bpw": {
+    "note": "Nominal L/A bpw on x (paper Figure 1a). Points taken from Table 1 rows; GPTQ-Ternary plotted on the GPTQ series at log2(3)=1.585.",
+    "bf16_avg": 94.10,
+    "series": [
+      {"key": "sacq", "label": "SACQ", "points": [[1.0, 83.05], [1.25, 92.70], [1.5, 93.85], [2.0, 94.25], [3.0, 94.10]]},
+      {"key": "actquant", "label": "ActQuant", "points": [[1.5, 30.05], [2.0, 86.30], [3.0, 94.45]]},
+      {"key": "gptq", "label": "GPTQ", "points": [[1.585, 31.95], [2.0, 64.35], [3.0, 93.70]]},
+      {"key": "hqq", "label": "HQQ", "points": [[2.0, 0.10], [3.0, 79.70]]},
+      {"key": "twla", "label": "TWLA", "points": [[2.0489, 93.05]]}
+    ]
+  },
+  "figure1b_memory": {
+    "note": "Resident model memory of the full loaded policy (paper Figure 1b / Table 1).",
+    "rows": [
+      {"label": "BF16", "memory": 5.677, "sr": 94.10, "ref": true},
+      {"label": "SACQ-3b", "memory": 1.902, "sr": 94.10},
+      {"label": "SACQ-2b", "memory": 1.310, "sr": 94.25},
+      {"label": "SACQ-1.5b", "memory": 1.175, "sr": 93.85, "featured": true},
+      {"label": "SACQ-1.25b", "memory": 1.114, "sr": 92.70},
+      {"label": "SACQ-1b", "memory": 1.069, "sr": 83.05}
+    ]
+  },
+  "table2_simpler": {
+    "caption": "Comparison of SACQ with existing quantization methods on the SimplER Google Robot benchmark using GR00T N1.7. Success rates (%) under the Visual Matching (VM) and Variant Aggregation (VA) protocols against GPTQ, ActQuant, and TWLA at comparable language/action bit budgets.",
+    "columns": ["Method", "L/A bpw", "Pick", "Move", "Drawer", "Apple", "Avg.", "Memory (GB)"],
+    "protocols": [
+      {"key": "vm", "label": "Visual Matching (VM)", "conditions": 864, "rows": [
+        {"method": "BF16", "bpw": "16.0000", "pick": 86.00, "move": 91.25, "drawer": 45.37, "apple": 12.96, "avg": 58.90, "memory": 5.677, "ref": true},
+        {"method": "GPTQ", "bpw": "2.0000", "pick": 70.33, "move": 25.00, "drawer": 6.94, "apple": 0.00, "avg": 25.57, "memory": 1.524},
+        {"method": "ActQuant", "bpw": "1.9998", "pick": 90.67, "move": 62.92, "drawer": 32.87, "apple": 0.00, "avg": 46.61, "memory": 1.331},
+        {"method": "TWLA", "bpw": "2.0635", "pick": 84.00, "move": 72.08, "drawer": 47.22, "apple": 7.41, "avg": 52.68, "memory": 2.782, "note": "twla"},
+        {"method": "SACQ-2b", "bpw": "1.9995", "pick": 91.33, "move": 89.17, "drawer": 49.54, "apple": 25.00, "avg": 63.76, "memory": 1.342, "ours": true, "featured": true},
+        {"method": "SACQ-1.5b", "bpw": "1.4999", "pick": 84.67, "move": 73.75, "drawer": 38.89, "apple": 31.48, "avg": 57.20, "memory": 1.191, "ours": true, "exclude_best": true}
+      ]},
+      {"key": "va", "label": "Variant Aggregation (VA)", "conditions": 1992, "rows": [
+        {"method": "BF16", "bpw": "16.0000", "pick": 83.27, "move": 81.83, "drawer": 21.69, "apple": 26.98, "avg": 53.45, "memory": 5.677, "ref": true},
+        {"method": "GPTQ", "bpw": "2.0000", "pick": 67.88, "move": 23.00, "drawer": 2.12, "apple": 0.00, "avg": 23.25, "memory": 1.524},
+        {"method": "ActQuant", "bpw": "1.9998", "pick": 76.97, "move": 64.33, "drawer": 11.38, "apple": 2.12, "avg": 38.70, "memory": 1.331},
+        {"method": "TWLA", "bpw": "2.0635", "pick": 79.88, "move": 68.83, "drawer": 14.29, "apple": 29.63, "avg": 48.16, "memory": 2.782, "note": "twla"},
+        {"method": "SACQ-2b", "bpw": "1.9995", "pick": 80.73, "move": 77.83, "drawer": 17.72, "apple": 32.80, "avg": 52.27, "memory": 1.342, "ours": true, "featured": true},
+        {"method": "SACQ-1.5b", "bpw": "1.4999", "pick": 75.39, "move": 74.17, "drawer": 4.76, "apple": 24.34, "avg": 44.67, "memory": 1.191, "ours": true, "exclude_best": true}
+      ]}
+    ]
+  },
+  "table3_ablation": {
+    "caption": "Component and structure-aware ablations of SACQ on LIBERO. The three components are evaluated at 1.5 L/A bpw and structure-aware fitting at 1.25 L/A bpw.",
+    "columns": ["Setting", "Alloc.", "Struct.", "Refine.", "Spatial", "Object", "Goal", "Long", "Avg."],
+    "groups": [
+      {"label": null, "rows": [
+        {"setting": "BF16", "alloc": null, "struct": null, "refine": null, "spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "ref": true}
+      ]},
+      {"label": "1.5 L/A bpw", "rows": [
+        {"setting": "Uniform Euclidean VQ", "alloc": false, "struct": false, "refine": false, "spatial": 0.0, "object": 0.0, "goal": 0.0, "long": 0.0, "avg": 0.00},
+        {"setting": "+ Mixed-bit allocation", "alloc": true, "struct": false, "refine": false, "spatial": 0.0, "object": 0.0, "goal": 0.0, "long": 0.0, "avg": 0.00, "indent": true},
+        {"setting": "+ Structure-aware fitting", "alloc": true, "struct": true, "refine": false, "spatial": 44.8, "object": 73.4, "goal": 31.4, "long": 40.4, "avg": 47.50, "indent": true},
+        {"setting": "Full SACQ-1.5b", "alloc": true, "struct": true, "refine": true, "spatial": 93.2, "object": 97.0, "goal": 96.2, "long": 89.0, "avg": 93.85, "ours": true, "featured": true},
+        {"setting": "w/o Struct. (Euclidean)", "alloc": true, "struct": false, "refine": true, "spatial": 95.2, "object": 95.8, "goal": 93.8, "long": 85.6, "avg": 92.60, "sep": true},
+        {"setting": "w/o Allocation (Uniform)", "alloc": false, "struct": true, "refine": true, "spatial": 94.2, "object": 96.8, "goal": 95.8, "long": 86.2, "avg": 93.25}
+      ]},
+      {"label": "1.25 L/A bpw", "rows": [
+        {"setting": "w/o Struct. (Euclidean)", "alloc": true, "struct": false, "refine": true, "spatial": 91.8, "object": 94.4, "goal": 91.2, "long": 73.2, "avg": 87.65},
+        {"setting": "Full SACQ-1.25b", "alloc": true, "struct": true, "refine": true, "spatial": 92.0, "object": 96.8, "goal": 94.4, "long": 87.6, "avg": 92.70, "ours": true}
+      ]}
+    ]
+  },
+  "table6_oft": {
+    "caption": "Cross-architecture evaluation on OpenVLA-OFT. Success rates (%) across the four LIBERO suites. V/L bpw denotes the quantization rate over the 420 vision and language linear layers. Bold marks the best result within each comparable bit-budget group.",
+    "columns": ["Method", "V/L bpw", "Spatial", "Object", "Goal", "Long", "Avg.", "Memory (GB)"],
+    "groups": [
+      {"label": null, "rows": [
+        {"method": "BF16", "bpw": "16.0000", "spatial": 93.8, "object": 98.2, "goal": 97.2, "long": 94.0, "avg": 95.80, "memory": 15.203, "ref": true}
+      ]},
+      {"label": "~3 bpw", "rows": [
+        {"method": "SACQ-3b", "bpw": "2.9988", "spatial": 91.8, "object": 97.4, "goal": 97.8, "long": 95.2, "avg": 95.55, "memory": 5.128, "ours": true}
+      ]},
+      {"label": "~2 bpw", "rows": [
+        {"method": "GPTQ", "bpw": "2.0000", "spatial": 67.6, "object": 55.8, "goal": 73.6, "long": 49.6, "avg": 61.65, "memory": 3.625},
+        {"method": "ActQuant", "bpw": "2.0000", "spatial": 79.6, "object": 60.8, "goal": 77.2, "long": 24.8, "avg": 60.60, "memory": 2.953},
+        {"method": "TWLA", "bpw": "2.1115", "spatial": 91.0, "object": 96.4, "goal": 96.2, "long": 93.8, "avg": 94.35, "memory": 8.960, "note": "twla"},
+        {"method": "SACQ-2b", "bpw": "2.0000", "spatial": 92.0, "object": 96.0, "goal": 98.0, "long": 90.2, "avg": 94.05, "memory": 2.926, "ours": true}
+      ]},
+      {"label": "~1.5 bpw", "rows": [
+        {"method": "GPTQ-Ternary", "bpw": "1.5850", "spatial": 0.0, "object": 0.0, "goal": 0.0, "long": 0.0, "avg": 0.00, "memory": 3.026, "note": "ternary"},
+        {"method": "ActQuant", "bpw": "1.5000", "spatial": 61.6, "object": 31.2, "goal": 35.2, "long": 0.0, "avg": 32.00, "memory": 2.433},
+        {"method": "SACQ-1.5b", "bpw": "1.4989", "spatial": 89.4, "object": 95.0, "goal": 92.8, "long": 65.6, "avg": 85.70, "memory": 2.463, "ours": true}
+      ]}
+    ]
+  },
+  "table7_libero_pro": {
+    "caption": "Evaluation of GR00T N1.7 on LIBERO-Pro. Success rates (%) are aggregated over the five perturbation families (Language, Object, Swap, Task, Environment) for each LIBERO suite; 10,000 episodes per model.",
+    "columns": ["Method", "L/A bpw", "Spatial", "Object", "Goal", "Long", "Avg."],
+    "rows": [
+      {"method": "BF16", "bpw": "16.0", "spatial": 44.60, "object": 41.28, "goal": 45.52, "long": 43.28, "avg": 43.67, "ref": true},
+      {"method": "SACQ-3b", "bpw": "3.0", "spatial": 44.44, "object": 41.04, "goal": 45.56, "long": 44.00, "avg": 43.76, "ours": true},
+      {"method": "SACQ-2b", "bpw": "2.0", "spatial": 44.60, "object": 41.08, "goal": 44.48, "long": 44.32, "avg": 43.62, "ours": true},
+      {"method": "SACQ-1.5b", "bpw": "1.5", "spatial": 43.64, "object": 40.72, "goal": 43.24, "long": 42.88, "avg": 42.62, "ours": true}
+    ]
+  },
+  "table8_limited_refinement": {
+    "caption": "Codebook fitting under limited post-quantization refinement at 1.5 L/A bpw. Calibration data per LIBERO suite is varied while refinement is fixed to 12 epochs. Delta is the difference in four-suite average success relative to structure-aware fitting under the same calibration budget.",
+    "budgets": [90, 180, 360, 720, 1440, 2880],
+    "suites": ["spatial", "object", "goal", "long", "avg"],
+    "fittings": [
+      {"key": "structure", "label": "Structure-aware",
+       "spatial": [76.2, 86.0, 91.2, 91.8, 93.2, 93.2],
+       "object": [94.6, 95.8, 96.6, 96.2, 97.6, 97.0],
+       "goal": [88.0, 90.6, 94.0, 93.0, 93.8, 96.2],
+       "long": [77.8, 83.0, 81.0, 84.0, 85.6, 89.0],
+       "avg": [84.15, 88.85, 90.70, 91.25, 92.55, 93.85]},
+      {"key": "local", "label": "Layer-local",
+       "spatial": [61.8, 78.8, 87.0, 90.6, 92.6, 92.6],
+       "object": [95.0, 96.4, 97.2, 95.8, 97.4, 97.0],
+       "goal": [71.8, 87.6, 88.2, 94.2, 95.0, 95.0],
+       "long": [69.6, 73.4, 80.0, 85.2, 86.8, 85.8],
+       "avg": [74.55, 84.05, 88.10, 91.45, 92.95, 92.60]},
+      {"key": "euclid", "label": "Euclidean",
+       "spatial": [42.2, 48.2, 78.4, 87.8, 93.6, 95.2],
+       "object": [48.6, 87.4, 95.2, 94.2, 97.6, 95.8],
+       "goal": [35.0, 52.0, 77.2, 88.4, 91.6, 93.8],
+       "long": [33.2, 41.0, 63.4, 75.4, 79.6, 85.6],
+       "avg": [39.75, 57.15, 78.55, 86.45, 90.60, 92.60]}
+    ],
+    "delta_vs_struct": {
+      "local": [-9.60, -4.80, -2.60, 0.20, 0.40, -1.25],
+      "euclid": [-44.40, -31.70, -12.15, -4.80, -1.95, -1.25]
+    }
+  }
+}
