@@ -18,9 +18,9 @@ Author metadata: Haesung Lee and Insu Han, KAIST; Insu Han is the corresponding 
 | Experimental setup | Section 4.1, Appendix D |
 | LIBERO results | Table 1 |
 | SimplER results (per task, VM and VA) | Table 2 |
+| OpenVLA-OFT and LIBERO-Pro (shown in Experiments, after SimplER) | Appendix F, Tables 6 and 7 |
 | Component ablation | Table 3 |
 | Limited-refinement study and chart | Appendix G, Table 8 |
-| OpenVLA-OFT and LIBERO-Pro | Appendix F, Tables 6 and 7 |
 | Limitations | Section 6 |
 
 ## Numbers
