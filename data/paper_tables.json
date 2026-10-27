@@ -1,12 +1,12 @@
 {
-  "_provenance": "All values transcribed from the SACQ preprint (main_arxiv.tex, 2026-10-27). Tables are keyed by their paper table number. Do not edit numbers here without a matching change in the manuscript.",
+  "_provenance": "All values transcribed from the SACQ arXiv submission (main_arxiv-3.tex, 2026-10-28). Tables are keyed by their paper table number. Do not edit numbers here without a matching change in the manuscript.",
   "bf16": {
     "libero": {"spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "memory_gb": 5.677},
     "simpler_vm": {"pick": 86.00, "move": 91.25, "drawer": 45.37, "apple": 12.96, "avg": 58.90, "memory_gb": 5.677},
     "simpler_va": {"pick": 83.27, "move": 81.83, "drawer": 21.69, "apple": 26.98, "avg": 53.45, "memory_gb": 5.677}
   },
   "table1_libero": {
-    "caption": "Comparison of SACQ with existing quantization methods on GR00T N1.7 across the four LIBERO suites. Success rates (%) against HQQ, GPTQ, ActQuant, and TWLA at comparable language/action bit budgets. L/A bpw is the parameter-weighted average bits per weight over the 338 language-backbone and action-head candidate layers.",
+    "caption": "Comparison of SACQ with existing quantization methods on GR00T N1.7 across the four LIBERO suites. Success rates (%) against HQQ, GPTQ, ActQuant, TWLA, and AQLM at comparable language/action bit budgets. L/A bpw is the parameter-weighted average bits per weight over the 338 language-backbone and action-head candidate layers.",
     "columns": ["Method", "L/A bpw", "Spatial", "Object", "Goal", "Long", "Avg.", "Memory (GB)"],
     "groups": [
       {"label": null, "rows": [
@@ -16,6 +16,7 @@
         {"method": "HQQ", "bpw": "3.0000", "spatial": 75.0, "object": 93.6, "goal": 76.4, "long": 73.8, "avg": 79.70, "memory": 1.660},
         {"method": "GPTQ", "bpw": "3.0000", "spatial": 95.2, "object": 97.4, "goal": 96.6, "long": 85.6, "avg": 93.70, "memory": 1.982},
         {"method": "ActQuant", "bpw": "3.0011", "spatial": 94.8, "object": 96.2, "goal": 96.4, "long": 90.4, "avg": 94.45, "memory": 1.562},
+        {"method": "AQLM", "bpw": "3.0000", "spatial": 93.6, "object": 97.4, "goal": 92.4, "long": 79.4, "avg": 90.70, "memory": 1.551},
         {"method": "SACQ-3b", "bpw": "2.9990", "spatial": 94.8, "object": 96.8, "goal": 96.6, "long": 88.2, "avg": 94.10, "memory": 1.902, "ours": true}
       ]},
       {"label": "~2 bpw", "rows": [
@@ -23,11 +24,13 @@
         {"method": "GPTQ", "bpw": "2.0000", "spatial": 57.2, "object": 90.2, "goal": 49.8, "long": 60.2, "avg": 64.35, "memory": 1.528},
         {"method": "ActQuant", "bpw": "2.0006", "spatial": 92.2, "object": 96.6, "goal": 88.6, "long": 67.8, "avg": 86.30, "memory": 1.306},
         {"method": "TWLA", "bpw": "2.0489", "spatial": 93.6, "object": 97.4, "goal": 96.4, "long": 84.8, "avg": 93.05, "memory": 2.772, "note": "twla"},
+        {"method": "AQLM", "bpw": "2.0000", "spatial": 93.0, "object": 95.0, "goal": 76.4, "long": 70.0, "avg": 83.60, "memory": 1.599},
         {"method": "SACQ-2b", "bpw": "1.9997", "spatial": 93.8, "object": 96.6, "goal": 97.0, "long": 89.6, "avg": 94.25, "memory": 1.310, "ours": true}
       ]},
       {"label": "~1.5 bpw", "rows": [
         {"method": "GPTQ-Ternary", "bpw": "1.5850", "spatial": 39.4, "object": 44.4, "goal": 10.6, "long": 33.4, "avg": 31.95, "memory": 1.337, "note": "ternary"},
         {"method": "ActQuant", "bpw": "1.4986", "spatial": 48.4, "object": 35.4, "goal": 26.6, "long": 9.8, "avg": 30.05, "memory": 1.169},
+        {"method": "AQLM", "bpw": "1.5000", "spatial": 89.8, "object": 96.4, "goal": 88.0, "long": 75.8, "avg": 87.50, "memory": 1.138},
         {"method": "SACQ-1.5b", "bpw": "1.4998", "spatial": 93.2, "object": 97.0, "goal": 96.2, "long": 89.0, "avg": 93.85, "memory": 1.175, "ours": true, "featured": true}
       ]},
       {"label": "~1.25 bpw", "rows": [
@@ -39,10 +42,11 @@
     ]
   },
   "figure1a_success_vs_bpw": {
-    "note": "Nominal L/A bpw on x (paper Figure 1a). Points taken from Table 1 rows; GPTQ-Ternary plotted on the GPTQ series at log2(3)=1.585.",
+    "note": "Nominal L/A bpw on x (paper Figure 1a). Points taken from Table 1 rows; GPTQ-Ternary plotted on the GPTQ series at log2(3)=1.585. Series order follows the figure legend.",
     "bf16_avg": 94.10,
     "series": [
       {"key": "sacq", "label": "SACQ", "points": [[1.0, 83.05], [1.25, 92.70], [1.5, 93.85], [2.0, 94.25], [3.0, 94.10]]},
+      {"key": "aqlm", "label": "AQLM", "points": [[1.5, 87.50], [2.0, 83.60], [3.0, 90.70]]},
       {"key": "actquant", "label": "ActQuant", "points": [[1.5, 30.05], [2.0, 86.30], [3.0, 94.45]]},
       {"key": "gptq", "label": "GPTQ", "points": [[1.585, 31.95], [2.0, 64.35], [3.0, 93.70]]},
       {"key": "hqq", "label": "HQQ", "points": [[2.0, 0.10], [3.0, 79.70]]},
@@ -61,7 +65,7 @@
     ]
   },
   "table2_simpler": {
-    "caption": "Comparison of SACQ with existing quantization methods on the SimplER Google Robot benchmark using GR00T N1.7. Success rates (%) under the Visual Matching (VM) and Variant Aggregation (VA) protocols against GPTQ, ActQuant, and TWLA at comparable language/action bit budgets.",
+    "caption": "Comparison of SACQ with existing quantization methods on the SimplER Google Robot benchmark using GR00T N1.7. Success rates (%) under the Visual Matching (VM) and Variant Aggregation (VA) protocols against GPTQ, ActQuant, TWLA, and AQLM at comparable language/action bit budgets.",
     "columns": ["Method", "L/A bpw", "Pick", "Move", "Drawer", "Apple", "Avg.", "Memory (GB)"],
     "protocols": [
       {"key": "vm", "label": "Visual Matching (VM)", "conditions": 864, "rows": [
@@ -69,6 +73,7 @@
         {"method": "GPTQ", "bpw": "2.0000", "pick": 70.33, "move": 25.00, "drawer": 6.94, "apple": 0.00, "avg": 25.57, "memory": 1.524},
         {"method": "ActQuant", "bpw": "1.9998", "pick": 90.67, "move": 62.92, "drawer": 32.87, "apple": 0.00, "avg": 46.61, "memory": 1.331},
         {"method": "TWLA", "bpw": "2.0635", "pick": 84.00, "move": 72.08, "drawer": 47.22, "apple": 7.41, "avg": 52.68, "memory": 2.782, "note": "twla"},
+        {"method": "AQLM", "bpw": "2.0000", "pick": 73.33, "move": 26.25, "drawer": 24.54, "apple": 0.00, "avg": 31.03, "memory": 1.595},
         {"method": "SACQ-2b", "bpw": "1.9995", "pick": 91.33, "move": 89.17, "drawer": 49.54, "apple": 25.00, "avg": 63.76, "memory": 1.342, "ours": true, "featured": true},
         {"method": "SACQ-1.5b", "bpw": "1.4999", "pick": 84.67, "move": 73.75, "drawer": 38.89, "apple": 31.48, "avg": 57.20, "memory": 1.191, "ours": true, "exclude_best": true}
       ]},
@@ -77,6 +82,7 @@
         {"method": "GPTQ", "bpw": "2.0000", "pick": 67.88, "move": 23.00, "drawer": 2.12, "apple": 0.00, "avg": 23.25, "memory": 1.524},
         {"method": "ActQuant", "bpw": "1.9998", "pick": 76.97, "move": 64.33, "drawer": 11.38, "apple": 2.12, "avg": 38.70, "memory": 1.331},
         {"method": "TWLA", "bpw": "2.0635", "pick": 79.88, "move": 68.83, "drawer": 14.29, "apple": 29.63, "avg": 48.16, "memory": 2.782, "note": "twla"},
+        {"method": "AQLM", "bpw": "2.0000", "pick": 65.82, "move": 32.50, "drawer": 5.29, "apple": 0.00, "avg": 25.90, "memory": 1.595},
         {"method": "SACQ-2b", "bpw": "1.9995", "pick": 80.73, "move": 77.83, "drawer": 17.72, "apple": 32.80, "avg": 52.27, "memory": 1.342, "ours": true, "featured": true},
         {"method": "SACQ-1.5b", "bpw": "1.4999", "pick": 75.39, "move": 74.17, "drawer": 4.76, "apple": 24.34, "avg": 44.67, "memory": 1.191, "ours": true, "exclude_best": true}
       ]}

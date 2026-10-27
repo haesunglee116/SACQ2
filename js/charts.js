@@ -13,6 +13,7 @@
   // marker shape plus a direct label, so identity never rests on hue alone.
   var SERIES = {
     sacq:      { label: "SACQ",            color: "var(--series-sacq)",     marker: "circle",   dash: "",      emphasis: true },
+    aqlm:      { label: "AQLM",            color: "var(--series-aqlm)",     marker: "pentagon", dash: "5 4" },
     actquant:  { label: "ActQuant",        color: "var(--series-actquant)", marker: "square",   dash: "7 5" },
     gptq:      { label: "GPTQ",            color: "var(--series-gptq)",     marker: "triangle", dash: "8 4 2 4" },
     hqq:       { label: "HQQ",             color: "var(--series-hqq)",      marker: "tridown",  dash: "2 4",   context: true },
@@ -45,6 +46,11 @@
       case "triangle": return "M" + cx + " " + (cy - r * 1.15) + "L" + (cx + r * 1.15) + " " + (cy + r * 0.85) + "L" + (cx - r * 1.15) + " " + (cy + r * 0.85) + "Z";
       case "tridown": return "M" + cx + " " + (cy + r * 1.15) + "L" + (cx + r * 1.15) + " " + (cy - r * 0.85) + "L" + (cx - r * 1.15) + " " + (cy - r * 0.85) + "Z";
       case "diamond": return "M" + cx + " " + (cy - r * 1.3) + "L" + (cx + r * 1.3) + " " + cy + "L" + cx + " " + (cy + r * 1.3) + "L" + (cx - r * 1.3) + " " + cy + "Z";
+      case "pentagon": {
+        var R = r * 1.2, pts = [];
+        for (var k = 0; k < 5; k++) { var a = -Math.PI / 2 + k * 2 * Math.PI / 5; pts.push((cx + R * Math.cos(a)) + " " + (cy + R * Math.sin(a))); }
+        return "M" + pts.join("L") + "Z";
+      }
       default: return null;
     }
   }
@@ -149,9 +155,11 @@
       });
     });
     // Direct labels: the SACQ-1.5b operating point, and the two gray context series.
+    // The label sits below-left of the point with a leader line; the region left
+    // of 1.5 bpw and below the SACQ line is empty (AQLM, ActQuant, GPTQ start at >= 1.5).
     var lx = x(1.5), ly = y(93.85);
-    text(svg, lx - 2, ly + 24, "93.85%", { "text-anchor": "middle", "class": "direct-label" });
-    el("line", { x1: lx, x2: lx, y1: ly + 7, y2: ly + 13, stroke: "var(--chart-axis)", "stroke-width": 1 }, svg);
+    text(svg, lx - 30, ly + 48, "93.85%", { "text-anchor": "middle", "class": "direct-label" });
+    el("line", { x1: lx - 3, x2: lx - 24, y1: ly + 8, y2: ly + 35, stroke: "var(--chart-axis)", "stroke-width": 1 }, svg);
     DATA.success.series.forEach(function (s) {
       var spec = SERIES[s.key];
       if (!spec.context) return;

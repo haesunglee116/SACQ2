@@ -1,6 +1,6 @@
 # Content provenance
 
-Source of truth: the SACQ preprint manuscript (`main_arxiv.tex`, author version with KAIST affiliation, as of 2026-10-27). The manuscript is not copied into this site.
+Source of truth: the SACQ arXiv submission manuscript (`main_arxiv-3.tex`, author version with KAIST affiliation, as of 2026-10-28). Relative to the 2026-10-27 preprint draft it adds the AQLM baseline (Tables 1 and 2, Figure 1a), the per-vector weight α(v) in the fitting objective (α(v) = 1 in SACQ), the statement that refinement applies only to vector-codebook layers, the AQLM implementation note, and the renamed AdaLN weighting ν. The manuscript is not copied into this site.
 
 Author metadata: Haesung Lee and Insu Han, KAIST; Insu Han is the corresponding author. The same metadata is used in the placeholder BibTeX.
 
@@ -29,8 +29,8 @@ Every number on the page is stored once in `data/paper_tables.json` and rendered
 
 ## Figures
 
-- Figure 1(a) and 1(b) are drawn as SVG at load time (`js/charts.js`) from Table 1 values, matching the manuscript figure's content: nominal L/A bpw on the x axis, the BF16 reference line, GPTQ-Ternary plotted on the GPTQ series at log2(3) ≈ 1.585 bpw, and resident memory of the full loaded policy with success-rate annotations. Series colors follow the manuscript figure for the three main series (SACQ red, ActQuant blue, GPTQ orange); HQQ and TWLA are drawn in neutral gray with distinct markers and direct labels so that every hue pair on the chart passes the colour-vision separation check. `assets/libero-panel-a.svg` and `libero-panel-b.svg` are the manuscript's own panel exports (`figure/libero_panel_a.pdf`, `libero_panel_b.pdf`), shown only when JavaScript is unavailable.
-- `assets/method-overview.svg` and `.png` are converted from `figure/sacq_overview.pdf`, the manuscript's Figure 2 export supplied on 2026-10-27 (GPTQ-4b/VC-2.75b state labels, "Action MSE", four example layers).
+- Figure 1(a) and 1(b) are drawn as SVG at load time (`js/charts.js`) from Table 1 values, matching the manuscript figure's content: nominal L/A bpw on the x axis, the BF16 reference line, GPTQ-Ternary plotted on the GPTQ series at log2(3) ≈ 1.585 bpw, and resident memory of the full loaded policy with success-rate annotations. Series colors follow the manuscript figure for the four main series (SACQ red, AQLM purple, ActQuant blue, GPTQ orange; the four hues were validated together for colour-vision separation); HQQ and TWLA are drawn in neutral gray with distinct markers and direct labels so that identity never rests on hue alone. `assets/libero-panel-a.svg` and `libero-panel-b.svg` are the manuscript's own panel exports (`figure/libero_panel_a.pdf`, `libero_panel_b.pdf`), shown only when JavaScript is unavailable.
+- `assets/method-overview.svg` and `.png` are converted from `figure/sacq_overview.pdf`, the arXiv-submission Figure 2 export supplied on 2026-10-28 (GPTQ-4b/VC-2.75b state labels, "Action MSE", four example layers, fitting objective with α(v)).
 - The Table 8 chart plots the per-suite and average columns of Table 8 against calibration observations per suite on a log scale, with the BF16 row as the reference line.
 
 ## Reporting constraints
