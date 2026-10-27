@@ -25,7 +25,7 @@
   --series-actquant: #2a78d6;
   --series-gptq: #eb6834;
   --series-hqq: #8b949e;
-  --series-twla: #8b949e;
+  --series-twla: #2c9279; /* paper figure uses #338975; nudged for the chroma floor */
   --series-local: #2a78d6;
   --series-euclid: #eb6834;
   --series-bf16: #9aa1a9;

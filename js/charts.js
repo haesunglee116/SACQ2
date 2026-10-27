@@ -8,16 +8,17 @@
   var NS = "http://www.w3.org/2000/svg";
 
   // Series identity: color, marker, and dash follow the entity in every chart.
-  // Three hues (red, blue, orange) are validated for all-pairs separation; the
-  // two context baselines (HQQ, TWLA) are neutral gray and carry their own
-  // marker shape plus a direct label, so identity never rests on hue alone.
+  // Colors follow the paper's Figure 1(a): SACQ red, AQLM purple, ActQuant blue,
+  // GPTQ orange, TWLA green (the five hues validated together for all-pairs
+  // separation); HQQ stays neutral gray. Marker shape and dash are the
+  // secondary encoding, and the legend names every series.
   var SERIES = {
     sacq:      { label: "SACQ",            color: "var(--series-sacq)",     marker: "circle",   dash: "",      emphasis: true },
     aqlm:      { label: "AQLM",            color: "var(--series-aqlm)",     marker: "pentagon", dash: "5 4" },
     actquant:  { label: "ActQuant",        color: "var(--series-actquant)", marker: "square",   dash: "7 5" },
     gptq:      { label: "GPTQ",            color: "var(--series-gptq)",     marker: "triangle", dash: "8 4 2 4" },
-    hqq:       { label: "HQQ",             color: "var(--series-hqq)",      marker: "tridown",  dash: "2 4",   context: true },
-    twla:      { label: "TWLA",            color: "var(--series-twla)",     marker: "diamond",  dash: "",      context: true },
+    hqq:       { label: "HQQ",             color: "var(--series-hqq)",      marker: "tridown",  dash: "2 4" },
+    twla:      { label: "TWLA",            color: "var(--series-twla)",     marker: "diamond",  dash: "" },
     structure: { label: "Structure-aware", color: "var(--series-sacq)",     marker: "circle",   dash: "",      emphasis: true },
     local:     { label: "Layer-local",     color: "var(--series-local)",    marker: "square",   dash: "7 5" },
     euclid:    { label: "Euclidean",       color: "var(--series-euclid)",   marker: "triangle", dash: "2 4" }
