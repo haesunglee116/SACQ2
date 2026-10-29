@@ -1,6 +1,6 @@
 # Content provenance
 
-Source of truth: the SACQ arXiv submission manuscript (`main_arxiv-3.tex`, author version with KAIST affiliation, as of 2026-10-28). The Motivation section was removed on 2026-10-29 after feedback. Relative to the 2026-10-27 preprint draft the manuscript adds the AQLM baseline (Tables 1 and 2, Figure 1a), the per-vector weight α(v) in the fitting objective (α(v) = 1 in SACQ), the statement that refinement applies only to vector-codebook layers, the AQLM implementation note, and the renamed AdaLN weighting ν. The manuscript is not copied into this site.
+Source of truth: the SACQ arXiv submission manuscript (`main_arxiv-5.tex`, author version with KAIST affiliation, as of 2026-10-29). The Motivation section was removed on 2026-10-29 after feedback. Relative to the 2026-10-27 preprint draft the manuscript adds the AQLM baseline (Tables 1 and 2, Figure 1a), the per-vector weight α(v) in the fitting objective (α(v) = 1 in SACQ), the statement that refinement applies only to vector-codebook layers, the AQLM implementation note, and the renamed AdaLN weighting ν. The manuscript is not copied into this site.
 
 Author metadata: Haesung Lee and Insu Han, KAIST; Insu Han is the corresponding author. The same metadata is used in the placeholder BibTeX.
 
@@ -17,9 +17,10 @@ Author metadata: Haesung Lee and Insu Han, KAIST; Insu Han is the corresponding 
 | Experimental setup | Section 4.1, Appendix D |
 | LIBERO results | Table 1 |
 | SimplER results (per task, VM and VA) | Table 2 |
-| OpenVLA-OFT and LIBERO-Pro (shown in Experiments, after SimplER) | Appendix F, Tables 6 and 7 |
-| Component ablation | Table 3 |
-| Limited-refinement study and chart | Appendix G, Table 8 |
+| Inference efficiency (A16/A8 success, latency, relative speed) | Section 4.3, Table 3 |
+| OpenVLA-OFT and LIBERO-Pro (shown in Experiments, after SimplER) | Appendix F, Tables 7 and 8 |
+| Component ablation | Table 4 |
+| Limited-refinement study and chart | Appendix G, Table 9 |
 | Limitations | Section 6 |
 
 ## Numbers

@@ -20,10 +20,10 @@
   <meta name="twitter:image" content="https://haesunglee116.github.io/SACQ_page/assets/social-card.png">
   <title>SACQ | Structure-Aware Codebook Quantization for VLA Models</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="css/style.css?v=20261029a">
-  <script src="js/data.js?v=20261029a" defer></script>
-  <script src="js/charts.js?v=20261029a" defer></script>
-  <script src="js/main.js?v=20261029a" defer></script>
+  <link rel="stylesheet" href="css/style.css?v=20261029b">
+  <script src="js/data.js?v=20261029b" defer></script>
+  <script src="js/charts.js?v=20261029b" defer></script>
+  <script src="js/main.js?v=20261029b" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -96,7 +96,7 @@
             <div class="chart" id="fig-success" data-chart="success" role="img" aria-label="Average LIBERO success versus nominal language/action bits per weight. SACQ stays near the BF16 reference of 94.10% down to 1.5 bits, where AQLM reaches 87.50% and ActQuant and GPTQ-Ternary fall to about 30%."></div>
           </div>
           <div class="panel">
-            <p class="panel-title">(b) Deployment efficiency of SACQ-1.5b</p>
+            <p class="panel-title">(b) GR00T N1.7 memory and inference efficiency</p>
             <div class="chart" id="fig-efficiency" data-chart="efficiency" role="img" aria-label="Resident model memory: BF16 5.677 GB versus SACQ-1.5b 1.175 GB, a 4.83 times reduction. Inference latency: optimized BF16 21.28 ms, SACQ-1.5b with BF16 activations 20.20 ms (1.05 times), SACQ-1.5b with INT8 activations 14.07 ms (1.51 times faster)."></div>
           </div>
         </div>
@@ -106,11 +106,11 @@
             <img src="assets/libero-panel-b.svg" alt="Resident model memory (BF16 5.677 GB, SACQ-1.5b 1.175 GB) and inference latency (optimized BF16 21.28 ms, SACQ-1.5b A16 20.20 ms, SACQ-1.5b A8 14.07 ms).">
           </div>
         </noscript>
-        <figcaption><strong>Ultra-low-bit performance and deployment efficiency of SACQ on GR00T N1.7.</strong> <strong>(a)</strong> SACQ maintains near-BF16 LIBERO performance down to 1.5 language/action bits per weight, outperforming the evaluated baselines at lower bit budgets. <strong>(b)</strong> Deployment efficiency of SACQ-1.5b. Resident model memory drops 4.83× relative to BF16. With INT8 activations (A8), inference latency improves 1.51× over the optimized BF16 runtime, while BF16 activations (A16) give 1.05×. All three latency configurations share the same runtime optimizations (fixed-weight caching and CUDA Graph). Hover a mark for its exact value.</figcaption>
+        <figcaption><strong>Ultra-low-bit performance and deployment efficiency of SACQ on GR00T N1.7.</strong> <strong>(a)</strong> SACQ maintains near-BF16 LIBERO performance down to 1.5 language/action bits per weight, outperforming the evaluated baselines at lower bit budgets. <strong>(b)</strong> SACQ-1.5b reduces resident model memory by 4.83× and, with A8 inference, achieves a 1.51× speedup over optimized BF16. A16 and A8 denote BF16 and INT8 activations; latency details are in the inference-efficiency table below. Hover a mark for its exact value.</figcaption>
       </figure>
       <details class="fine-print">
         <summary>Quantization scope and how bits are counted</summary>
-        <p>L/A bpw is the nominal, parameter-weighted average over the 338 language-backbone and action-head candidate linear layers (112 + 226) and excludes codebook and scale metadata; allocation itself is driven by the calculated storage including that metadata. The remaining 128 linear layers and the token embedding are fixed at 4-bit; activations remain BF16. Memory is the resident footprint of the full loaded policy. The GPTQ series includes a custom ternary extension at log<sub>2</sub>(3) ≈ 1.585 bpw; the 2- and 3-bpw points use standard GPTQ. “TWLA” is the TWLA-compatible PyTorch port described in the paper. Each configuration uses 500 episodes per LIBERO suite. Latency is the synchronized wall-clock median of the pure model forward on an RTX 4090 at batch size 1 with four denoising steps, excluding preprocessing; the stock GR00T runtime without these optimizations measures 56.04 ms and is not plotted.</p>
+        <p>L/A bpw is the nominal, parameter-weighted average over the 338 language-backbone and action-head candidate linear layers (112 + 226) and excludes codebook and scale metadata; allocation itself is driven by the calculated storage including that metadata. The remaining 128 linear layers and the token embedding are fixed at 4-bit; activations remain BF16. Memory is the resident footprint of the full loaded policy. The GPTQ series includes a custom ternary extension at log<sub>2</sub>(3) ≈ 1.585 bpw; the 2- and 3-bpw points use standard GPTQ. “TWLA” is the TWLA-compatible PyTorch port described in the paper. Each configuration uses 500 episodes per LIBERO suite. Latency is whole-model inference latency measured with the official GR00T inference path on an RTX 4090 at batch size 1 with four denoising steps: wall-clock time with GPU synchronization before and after each model call, the median of 20 measurements after five warmup iterations, excluding preprocessing. The original (unoptimized) BF16 path measures 56.04 ms and is listed in the inference-efficiency table rather than plotted.</p>
       </details>
     </section>
 
@@ -118,7 +118,7 @@
     <section class="abstract-band section" id="abstract" aria-labelledby="abstract-title">
       <div class="reading-width">
         <h2 id="abstract-title">Abstract</h2>
-        <p>Vision-Language-Action (VLA) models enable capable robot behavior, but their large memory footprint limits deployment on resource-constrained robotic platforms. Weight quantization is a natural remedy, yet post-training quantization (PTQ) recipes inherited from large language models degrade when applied to VLAs at ultra-low precision. Existing low-bit PTQ methods often fail to explicitly account for the structure of downstream operations and allocate precision without considering its effect on the policy actions. We introduce <strong>SACQ</strong>, an ultra-low-bit weight-only vector-codebook quantization framework for VLAs. SACQ combines (1) <strong>structure-aware codebook fitting</strong> with role-specific quadratic metrics that reflect input statistics and downstream sensitivity; (2) <strong>action-aware mixed-bit allocation</strong> based on the increase in final-action error as individual layers are compressed; and (3) <strong>two-stage post-quantization refinement</strong> that reassigns codeword indices with second-order error compensation and calibrates codebooks and row-group scales against the decoded action. On GR00T N1.7, SACQ retains 93.85% average success across four LIBERO suites at 1.5 bits per language/action weight, nearly matching the 94.10% BF16 reference, while reducing model memory by 4.83×. On the SimplER benchmark, SACQ further achieves 63.76% and 52.27% success under Visual Matching and Variant Aggregation at 2 bits per language/action weight, compared to 58.90% and 53.45% for BF16, respectively.</p>
+        <p>Vision-Language-Action (VLA) models enable capable robot behavior, but their large memory footprint limits deployment on resource-constrained robotic platforms. Weight quantization is a natural remedy, yet post-training quantization (PTQ) recipes inherited from large language models degrade when applied to VLAs at ultra-low precision. Existing low-bit PTQ methods often fail to explicitly account for the structure of downstream operations and allocate precision without considering its effect on the policy actions. We introduce <strong>SACQ</strong>, an ultra-low-bit weight-only vector-codebook quantization framework for VLAs. SACQ combines (1) <strong>structure-aware codebook fitting</strong> with role-specific quadratic metrics that reflect input statistics and downstream sensitivity; (2) <strong>action-aware mixed-bit allocation</strong> based on the increase in final-action error as individual layers are compressed; and (3) <strong>two-stage post-quantization refinement</strong> that reassigns codeword indices with second-order error compensation and calibrates codebooks and row-group scales against the decoded action. Using GR00T N1.7, SACQ achieves 93.85% average success across four LIBERO suites at 1.5 bits per language/action weight while reducing model memory by 4.83×. With low-precision activation inference (A8), it retains 93.55% success while running 1.51× faster than optimized BF16. On SimplER, SACQ further achieves 63.76% and 52.27% success under Visual Matching and Variant Aggregation at 2 bits per language/action weight, compared to 58.90% and 53.45% for BF16, respectively.</p>
       </div>
     </section>
 
@@ -262,7 +262,7 @@
     <!-- ───────────────────────── Results ───────────────────────── -->
     <section class="section container results-section" id="results" aria-labelledby="results-title">
       <div class="section-heading"><h2 id="results-title">Experiments</h2></div>
-      <p class="section-lead">We quantize 338 linear layers of GR00T N1.7 (112 in the language backbone, 226 in the DiT action head) and compare against HQQ, GPTQ, ActQuant, TWLA, and AQLM under the same language/action scope. Methods that require calibration use the same calibration data as SACQ while following their own quantization and optimization procedures. Evaluation uses the four LIBERO suites (500 episodes each, environment seed 17) and the SimplER Google Robot Visual Matching and Variant Aggregation protocols (seed 7). Two further evaluations check that the behavior carries over: SACQ applied to OpenVLA-OFT, a different VLA architecture, and SACQ-quantized GR00T N1.7 under the LIBERO-Pro perturbations.</p>
+      <p class="section-lead">We quantize 338 linear layers of GR00T N1.7 (112 language-backbone and 226 DiT action-head layers) while keeping the remaining 128 linear layers and the token embedding at 4-bit; activations remain BF16, with BF16 as the full-precision reference. We compare against HQQ, GPTQ, ActQuant, TWLA, and AQLM under the same language/action scope; calibration-based methods use the same calibration data as SACQ and follow their own quantization and optimization procedures. Evaluation uses the four LIBERO suites (500 episodes each, environment seed 17) and the SimplER Google Robot Visual Matching and Variant Aggregation protocols (seed 7). We then measure inference efficiency of SACQ-1.5b, and check that the behavior carries over to OpenVLA-OFT, a different VLA architecture, and to GR00T N1.7 under the LIBERO-Pro perturbations.</p>
 
       <article class="result-block" aria-labelledby="libero-title">
         <div class="result-heading"><div><h3 id="libero-title">GR00T N1.7 on LIBERO</h3></div><span class="source-label">Paper · Table 1</span></div>
@@ -351,8 +351,29 @@
         <p class="table-notes">VM comprises 864 evaluation conditions and VA 1,992, each covering four task categories: Pick, Move, Drawer, and Apple. Only the first action of each predicted chunk is executed.</p>
       </article>
 
+      <article class="result-block" aria-labelledby="efficiency-title">
+        <div class="result-heading"><div><h3 id="efficiency-title">Inference efficiency of SACQ-1.5b</h3></div><span class="source-label">Paper · Table 3</span></div>
+        <p>We evaluate SACQ-1.5b under two execution settings: the standard A16 setting with BF16 activations, and a low-precision A8 setting. In A8, linear projections use dynamic per-row symmetric INT8 activation quantization with INT8 GEMMs, while action self-attention and vision attention use an INT8-QK/FP8-PV attention path; action cross-attention and language attention remain in BF16. The runtime additionally uses optimized packed-weight decoding kernels and CUDA Graph execution while retaining SACQ’s compressed weight representation.</p>
+        <p>SACQ-1.5b (A8) achieves 93.55% average success on LIBERO, only 0.30 percentage points below A16 and 0.55 below BF16, while running <strong>1.51× faster</strong> than the matched optimized BF16 implementation. Latency is whole-model inference latency on an RTX 4090 with batch size 1 and four denoising steps, measured with the official GR00T inference path: wall-clock time with GPU synchronization before and after each model call, reported as the median of 20 measurements after five warmup iterations, excluding preprocessing.</p>
+        <!-- BUILD:table_efficiency -->
+<div class="table-scroll" tabindex="0" role="region" aria-label="Inference efficiency, horizontally scrollable">
+<table class="results-table">
+<caption>Inference efficiency of SACQ-1.5b on GR00T N1.7 across the four LIBERO suites. Task success rates (%), whole-model inference latency, and relative speed with respect to optimized BF16.</caption>
+<thead><tr><th scope="col">Configuration</th><th scope="col">Spatial</th><th scope="col">Object</th><th scope="col">Goal</th><th scope="col">Long</th><th scope="col">Avg.</th><th scope="col">Latency (ms)</th><th scope="col">Relative speed</th></tr></thead>
+<tbody>
+<tr class="reference"><th scope="row">Original BF16</th><td>94.2</td><td>97.6</td><td>95.2</td><td>89.4</td><td>94.10</td><td>56.04</td><td>0.38×</td></tr>
+<tr class="reference"><th scope="row">Optimized BF16</th><td>94.2</td><td>97.6</td><td>95.2</td><td>89.4</td><td>94.10</td><td>21.28</td><td>1.00×</td></tr>
+<tr class="ours"><th scope="row">SACQ-1.5b (A16)</th><td>93.2</td><td>97.0</td><td>96.2</td><td>89.0</td><td>93.85</td><td>20.20</td><td>1.05×</td></tr>
+<tr class="ours featured"><th scope="row">SACQ-1.5b (A8)</th><td>93.8</td><td>96.2</td><td>95.4</td><td>88.8</td><td>93.55</td><td><strong>14.07</strong></td><td><strong>1.51×</strong></td></tr>
+</tbody>
+</table>
+</div>
+<!-- /BUILD:table_efficiency -->
+        <p class="table-notes">Relative speed is with respect to optimized BF16. The original BF16 row is the unoptimized GR00T inference path, shown for reference.</p>
+      </article>
+
       <article class="result-block" aria-labelledby="oft-title">
-        <div class="result-heading"><div><h3 id="oft-title">OpenVLA-OFT on LIBERO</h3></div><span class="source-label">Paper · Table 6</span></div>
+        <div class="result-heading"><div><h3 id="oft-title">OpenVLA-OFT on LIBERO</h3></div><span class="source-label">Paper · Table 7</span></div>
         <p>Applying SACQ to a different VLA architecture, where the quantization scope covers 420 vision and language linear layers and excludes the MLP action head, gives 95.55% average success at 3 V/L bpw and 94.05% at 2 V/L bpw against a 95.80% BF16 reference. V/L bpw is not directly comparable to GR00T’s L/A bpw.</p>
         <!-- BUILD:table6 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="OpenVLA-OFT results, horizontally scrollable">
@@ -379,7 +400,7 @@
       </article>
 
       <article class="result-block" aria-labelledby="libero-pro-title">
-        <div class="result-heading"><div><h3 id="libero-pro-title">GR00T N1.7 on LIBERO-Pro</h3></div><span class="source-label">Paper · Table 7</span></div>
+        <div class="result-heading"><div><h3 id="libero-pro-title">GR00T N1.7 on LIBERO-Pro</h3></div><span class="source-label">Paper · Table 8</span></div>
         <p>Under five perturbation families (Language, Object, Swap, Task, Environment) evaluated over 10,000 episodes per model, the 3-bit and 2-bit SACQ models stay within 0.1 percentage points of BF16, and the 1.5-bit model within about one point.</p>
         <!-- BUILD:table7 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="LIBERO-Pro results, horizontally scrollable">
@@ -403,7 +424,7 @@
       <div class="section-heading"><h2 id="analysis-title">Analysis</h2></div>
 
       <article class="result-block" aria-labelledby="ablation-title">
-        <div class="result-heading"><div><h3 id="ablation-title">Component ablation on LIBERO</h3></div><span class="source-label">Paper · Table 3</span></div>
+        <div class="result-heading"><div><h3 id="ablation-title">Component ablation on LIBERO</h3></div><span class="source-label">Paper · Table 4</span></div>
         <p>At 1.5 L/A bpw, Euclidean VQ with mixed-bit allocation fails to preserve the policy entirely, whereas structure-aware fitting raises the pre-refinement average to 47.50%. Refinement then recovers the full model to 93.85%. Removing structure-aware fitting or mixed-bit allocation from the full pipeline lowers the final success to 92.60% and 93.25%. The effect grows under more aggressive compression: at 1.25 L/A bpw, structure-aware fitting lifts the average from 87.65% to <strong>92.70%</strong>, with LIBERO-Long improving from 73.2% to <strong>87.6%</strong>.</p>
         <!-- BUILD:table3 -->
 <div class="table-scroll" tabindex="0" role="region" aria-label="Component ablation, horizontally scrollable">
@@ -429,7 +450,7 @@
       </article>
 
       <article class="result-block" aria-labelledby="budget-title">
-        <div class="result-heading"><div><h3 id="budget-title">Structure-aware fitting under limited refinement</h3></div><span class="source-label">Paper · Table 8</span></div>
+        <div class="result-heading"><div><h3 id="budget-title">Structure-aware fitting under limited refinement</h3></div><span class="source-label">Paper · Table 9</span></div>
         <p>With the mixed-bit allocation fixed and refinement held at 12 epochs, three codebook-fitting objectives are compared as the calibration data per suite shrinks from the full 2,880 observations to 90. With 90 observations, structure-aware fitting reaches 84.15% average success versus 74.55% for layer-local reconstruction and 39.75% for Euclidean fitting. The gap narrows as data grows, and at the full budget structure-aware fitting recovers LIBERO-Long to 89.0%, closest to the 89.4% BF16 reference.</p>
         <div class="chart-controls" role="group" aria-label="Suite shown in the chart">
           <span class="control-label">Suite</span>
@@ -479,7 +500,7 @@
         </details>
       </article>
 
-      <p class="scope-note"><strong>Limitations.</strong> SACQ quantizes weights only. The latency gain in Figure 1(b) comes from INT8 activations together with runtime optimizations that the BF16 baseline also receives, not from dedicated codebook kernels, which remain future work. Evaluation is limited to simulation benchmarks; real-robot validation is left for future work.</p>
+      <p class="scope-note"><strong>Limitations.</strong> Evaluation is limited to simulation benchmarks; validation on real robotic systems remains an important direction for future work.</p>
     </section>
 
     <!-- ───────────────────────── Citation ───────────────────────── -->

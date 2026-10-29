@@ -1,5 +1,5 @@
 {
-  "_provenance": "All values transcribed from the SACQ arXiv submission (main_arxiv-3.tex, 2026-10-28). Tables are keyed by their paper table number. Do not edit numbers here without a matching change in the manuscript.",
+  "_provenance": "All values transcribed from the SACQ arXiv submission (main_arxiv-5.tex, 2026-10-29). Tables are keyed by their paper table number. Do not edit numbers here without a matching change in the manuscript.",
   "bf16": {
     "libero": {"spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "memory_gb": 5.677},
     "simpler_vm": {"pick": 86.00, "move": 91.25, "drawer": 45.37, "apple": 12.96, "avg": 58.90, "memory_gb": 5.677},
@@ -88,6 +88,16 @@
         {"method": "SACQ-2b", "bpw": "1.9995", "pick": 80.73, "move": 77.83, "drawer": 17.72, "apple": 32.80, "avg": 52.27, "memory": 1.342, "ours": true, "featured": true},
         {"method": "SACQ-1.5b", "bpw": "1.4999", "pick": 75.39, "move": 74.17, "drawer": 4.76, "apple": 24.34, "avg": 44.67, "memory": 1.191, "ours": true, "exclude_best": true}
       ]}
+    ]
+  },
+  "table_inference_efficiency": {
+    "caption": "Inference efficiency of SACQ-1.5b on GR00T N1.7 across the four LIBERO suites. Task success rates (%), whole-model inference latency, and relative speed with respect to optimized BF16.",
+    "columns": ["Configuration", "Spatial", "Object", "Goal", "Long", "Avg.", "Latency (ms)", "Relative speed"],
+    "rows": [
+      {"config": "Original BF16", "spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "latency": 56.04, "speed": "0.38×", "ref": true},
+      {"config": "Optimized BF16", "spatial": 94.2, "object": 97.6, "goal": 95.2, "long": 89.4, "avg": 94.10, "latency": 21.28, "speed": "1.00×", "ref": true},
+      {"config": "SACQ-1.5b (A16)", "spatial": 93.2, "object": 97.0, "goal": 96.2, "long": 89.0, "avg": 93.85, "latency": 20.20, "speed": "1.05×", "ours": true},
+      {"config": "SACQ-1.5b (A8)", "spatial": 93.8, "object": 96.2, "goal": 95.4, "long": 88.8, "avg": 93.55, "latency": 14.07, "speed": "1.51×", "ours": true, "featured": true}
     ]
   },
   "table3_ablation": {

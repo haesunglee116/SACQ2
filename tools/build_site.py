@@ -142,6 +142,24 @@ def build_table3(table):
     return wrap_table(table["caption"], th_cols(columns), body, "Component ablation, horizontally scrollable")
 
 
+def build_table_efficiency(table):
+    columns = table["columns"]
+    keys = ["spatial", "object", "goal", "long"]
+    body = ""
+    for row in table["rows"]:
+        cells = method_cell(row, "config")
+        for key in keys:
+            cells += num_cell(row, key, 1)
+        cells += num_cell(row, "avg", 2)
+        latency = fmt(row["latency"], 2)
+        speed = escape(row["speed"])
+        if row.get("featured"):
+            latency, speed = f"<strong>{latency}</strong>", f"<strong>{speed}</strong>"
+        cells += f"<td>{latency}</td><td>{speed}</td>"
+        body += f"<tr{row_class(row)}>{cells}</tr>\n"
+    return wrap_table(table["caption"], th_cols(columns), body, "Inference efficiency, horizontally scrollable")
+
+
 def build_table7(table):
     columns = table["columns"]
     keys = ["spatial", "object", "goal", "long"]
@@ -206,6 +224,7 @@ def main():
         "table1": build_success_table(data["table1_libero"], suites, aria="LIBERO results, horizontally scrollable"),
         "table2_vm": build_table2(data["table2_simpler"], "vm"),
         "table2_va": build_table2(data["table2_simpler"], "va"),
+        "table_efficiency": build_table_efficiency(data["table_inference_efficiency"]),
         "table3": build_table3(data["table3_ablation"]),
         "table6": build_success_table(data["table6_oft"], suites, aria="OpenVLA-OFT results, horizontally scrollable"),
         "table7": build_table7(data["table7_libero_pro"]),
