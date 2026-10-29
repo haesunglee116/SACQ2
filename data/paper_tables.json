@@ -53,16 +53,18 @@
       {"key": "twla", "label": "TWLA", "points": [[2.0489, 93.05]]}
     ]
   },
-  "figure1b_memory": {
-    "note": "Resident model memory of the full loaded policy (paper Figure 1b / Table 1).",
-    "rows": [
-      {"label": "BF16", "memory": 5.677, "sr": 94.10, "ref": true},
-      {"label": "SACQ-3b", "memory": 1.902, "sr": 94.10},
-      {"label": "SACQ-2b", "memory": 1.310, "sr": 94.25},
-      {"label": "SACQ-1.5b", "memory": 1.175, "sr": 93.85, "featured": true},
-      {"label": "SACQ-1.25b", "memory": 1.114, "sr": 92.70},
-      {"label": "SACQ-1b", "memory": 1.069, "sr": 83.05}
-    ]
+  "figure1b_efficiency": {
+    "note": "Paper Figure 1(b) v2 (2026-10-29): resident memory of the full loaded policy (Table 1) and inference latency of SACQ-1.5b. Latency: RTX 4090, batch 1, four denoising steps, synchronized CPU wall-clock median of the pure model forward; the three latency rows share the same runtime optimizations (fixed-weight caching, CUDA Graph). Stock GR00T runtime measures 56.035 ms and is not plotted. Raw values 21.284 / 20.203 / 14.066 ms.",
+    "memory": [
+      {"label": "BF16", "value": 5.677, "ref": true},
+      {"label": "SACQ-1.5b", "value": 1.175, "note": "4.83× reduction", "featured": true}
+    ],
+    "latency": [
+      {"label": "Optimized BF16", "value": 21.28, "note": "1.00×", "activations": "BF16", "ref": true},
+      {"label": "SACQ-1.5b (A16)", "value": 20.20, "note": "1.05×", "activations": "BF16"},
+      {"label": "SACQ-1.5b (A8)", "value": 14.07, "note": "1.51× faster", "activations": "INT8", "featured": true}
+    ],
+    "stock_bf16_latency_ms": 56.04
   },
   "table2_simpler": {
     "caption": "Comparison of SACQ with existing quantization methods on the SimplER Google Robot benchmark using GR00T N1.7. Success rates (%) under the Visual Matching (VM) and Variant Aggregation (VA) protocols against GPTQ, ActQuant, TWLA, and AQLM at comparable language/action bit budgets.",

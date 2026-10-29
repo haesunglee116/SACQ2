@@ -177,66 +177,83 @@
     legend(container, [{ ref: true, label: "BF16 reference" }].concat(DATA.success.series.map(function (s) { return SERIES[s.key]; })));
   }
 
-  // ── Figure 1(b): resident memory bars ────────────────────────
-  function renderMemory(container) {
-    var rows = DATA.memory.rows;
+  // ── Figure 1(b): deployment efficiency (memory + latency) ────
+  // Two horizontal bar charts stacked in one SVG, mirroring the paper's
+  // Figure 1(b): resident memory (BF16 vs SACQ-1.5b) and inference latency
+  // (optimized BF16, SACQ-1.5b with BF16 activations, with INT8 activations).
+  function renderEfficiency(container) {
+    var E = DATA.efficiency;
     var width = Math.max(300, container.clientWidth);
-    var rowH = 38, barH = 22;
-    var m = { top: 14, right: 16, bottom: 44, left: 96 };
-    var height = m.top + rows.length * rowH + m.bottom;
+    var rowH = 36, barH = 20, gap = 44;
+    var m = { top: 10, right: 16, bottom: 40, left: 128 };
     var innerW = width - m.left - m.right;
-    // Domain runs past the largest bar so the tip labels never clip.
-    var x = linear([0, 8], [m.left, m.left + innerW]);
+    var memH = E.memory.length * rowH, latH = E.latency.length * rowH;
+    var height = m.top + memH + gap + latH + m.bottom;
     container.innerHTML = "";
     var svg = el("svg", { viewBox: "0 0 " + width + " " + height, width: width, height: height }, container);
-    var grid = el("g", { "class": "grid" }, svg);
-    [2, 4, 6, 8].forEach(function (v) { el("line", { x1: x(v), x2: x(v), y1: m.top, y2: m.top + rows.length * rowH }, grid); });
-    var axis = el("g", { "class": "axis" }, svg);
-    el("line", { x1: m.left, x2: m.left, y1: m.top, y2: m.top + rows.length * rowH }, axis);
-    el("line", { x1: m.left, x2: m.left + innerW, y1: m.top + rows.length * rowH, y2: m.top + rows.length * rowH }, axis);
-    var ticks = el("g", { "class": "tick" }, svg);
-    [0, 2, 4, 6, 8].forEach(function (v) { text(ticks, x(v), m.top + rows.length * rowH + 18, String(v), { "text-anchor": "middle" }); });
-    text(svg, m.left + innerW / 2, height - 6, "Resident model memory (GB)", { "text-anchor": "middle", "class": "axis-title" });
+    var estimate = function (str) { return str.length * 6.6; };
 
-    var base = rows[0].memory;
-    rows.forEach(function (r, i) {
-      var cy = m.top + i * rowH + rowH / 2;
-      var w = x(r.memory) - x(0);
-      var cls = r.ref ? "ref" : (r.featured ? "featured" : "ours");
-      text(svg, m.left - 10, cy + 4, r.label, { "text-anchor": "end", "class": "cat-label" + (r.featured ? " featured" : "") });
-      var g = el("g", null, svg);
-      var hit = el("rect", { x: m.left, y: cy - rowH / 2, width: innerW, height: rowH, "class": "bar-hit", tabindex: 0, role: "img",
-        "aria-label": r.label + ": " + r.memory.toFixed(3) + " gigabytes, success rate " + r.sr.toFixed(2) + " percent" }, g);
-      // Square at the baseline, 4px rounded data-end.
-      var rr = 4;
-      var d = "M" + x(0) + " " + (cy - barH / 2) + "h" + (w - rr) + "a" + rr + " " + rr + " 0 0 1 " + rr + " " + rr + "v" + (barH - 2 * rr) + "a" + rr + " " + rr + " 0 0 1 " + (-rr) + " " + rr + "h" + (-(w - rr)) + "Z";
-      el("path", { d: d, "class": "bar " + cls }, g);
-      var label = r.memory.toFixed(3);
-      var note = r.ref ? "SR " + r.sr.toFixed(2) + "%" : (base / r.memory).toFixed(2) + "× (SR " + r.sr.toFixed(2) + "%)";
-      text(svg, x(r.memory) + 8, cy + 4, label, { "class": "bar-value" });
-      // The note goes after the value when it fits; otherwise inside a wide bar;
-      // otherwise it is left to the tooltip (and Table 1).
-      var noteW = note.length * 6.6, noteX = x(r.memory) + 8 + 42;
-      if (noteX + noteW <= width - 2) text(svg, noteX, cy + 4, note, { "class": "bar-note" });
-      else if (w > noteW + 20) text(svg, x(r.memory) - 8, cy + 4, note, { "class": "bar-note inside", "text-anchor": "end" });
-      function show(e) {
-        var c = e && e.clientX != null ? { x: e.clientX, y: e.clientY } : rectCenter(hit);
-        showTip(r.label, [
-          { label: "Resident memory", value: r.memory.toFixed(3) + " GB" },
-          { label: "Reduction vs BF16", value: r.ref ? "—" : (base / r.memory).toFixed(2) + "×" },
-          { label: "LIBERO avg. success", value: r.sr.toFixed(2) + "%" }
-        ], c.x, c.y);
-      }
-      hit.addEventListener("pointerenter", show);
-      hit.addEventListener("pointermove", show);
-      hit.addEventListener("pointerleave", hideTip);
-      hit.addEventListener("focus", function () { show(null); });
-      hit.addEventListener("blur", hideTip);
+    function block(rows, y0, domain, ticks, axisTitle, unit, tipRows) {
+      var x = linear(domain, [m.left, m.left + innerW]);
+      var h = rows.length * rowH;
+      var grid = el("g", { "class": "grid" }, svg);
+      ticks.forEach(function (v) { if (v > 0) el("line", { x1: x(v), x2: x(v), y1: y0, y2: y0 + h }, grid); });
+      var axis = el("g", { "class": "axis" }, svg);
+      el("line", { x1: m.left, x2: m.left, y1: y0, y2: y0 + h }, axis);
+      el("line", { x1: m.left, x2: m.left + innerW, y1: y0 + h, y2: y0 + h }, axis);
+      var tk = el("g", { "class": "tick" }, svg);
+      ticks.forEach(function (v) { text(tk, x(v), y0 + h + 17, String(v), { "text-anchor": "middle" }); });
+      text(svg, m.left + innerW / 2, y0 + h + 33, axisTitle, { "text-anchor": "middle", "class": "axis-title" });
+      rows.forEach(function (r, i) {
+        var cy = y0 + i * rowH + rowH / 2;
+        var w = x(r.value) - x(0);
+        var cls = r.ref ? "ref" : (r.featured ? "featured" : "ours");
+        text(svg, m.left - 10, cy + 4, r.label, { "text-anchor": "end", "class": "cat-label" + (r.featured ? " featured" : "") });
+        var g = el("g", null, svg);
+        var hit = el("rect", { x: m.left, y: cy - rowH / 2, width: innerW, height: rowH, "class": "bar-hit", tabindex: 0, role: "img",
+          "aria-label": r.label + ": " + r.value + " " + unit + (r.note ? ", " + r.note : "") }, g);
+        var rr = 4;
+        var d = "M" + x(0) + " " + (cy - barH / 2) + "h" + (w - rr) + "a" + rr + " " + rr + " 0 0 1 " + rr + " " + rr + "v" + (barH - 2 * rr) + "a" + rr + " " + rr + " 0 0 1 " + (-rr) + " " + rr + "h" + (-(w - rr)) + "Z";
+        el("path", { d: d, "class": "bar " + cls }, g);
+        var label = typeof r.value === "number" && unit === "GB" ? r.value.toFixed(3) : r.value.toFixed(2);
+        text(svg, x(r.value) + 8, cy + 4, label, { "class": "bar-value" });
+        if (r.note) {
+          var noteX = x(r.value) + 8 + label.length * 7.8 + 10; // bold value label, then a gap
+          if (noteX + estimate(r.note) <= width - 2) text(svg, noteX, cy + 4, r.note, { "class": "bar-note" + (r.featured ? " strong" : "") });
+          else if (w > estimate(r.note) + 20) text(svg, x(r.value) - 8, cy + 4, r.note, { "class": "bar-note inside", "text-anchor": "end" });
+        }
+        function show(e) {
+          var c = e && e.clientX != null ? { x: e.clientX, y: e.clientY } : rectCenter(hit);
+          showTip(r.label, tipRows(r), c.x, c.y);
+        }
+        hit.addEventListener("pointerenter", show);
+        hit.addEventListener("pointermove", show);
+        hit.addEventListener("pointerleave", hideTip);
+        hit.addEventListener("focus", function () { show(null); });
+        hit.addEventListener("blur", hideTip);
+      });
+      return y0 + h;
+    }
+
+    var memBase = E.memory[0].value;
+    block(E.memory, m.top, [0, 7], [0, 2, 4, 6], "Resident model memory (GB)", "GB", function (r) {
+      return [
+        { label: "Resident memory", value: r.value.toFixed(3) + " GB" },
+        { label: "Reduction vs BF16", value: r.ref ? "—" : (memBase / r.value).toFixed(2) + "×" }
+      ];
+    });
+    var latBase = E.latency[0].value;
+    block(E.latency, m.top + memH + gap, [0, 28], [0, 10, 20], "Inference latency (ms)", "ms", function (r) {
+      return [
+        { label: "Latency (batch 1)", value: r.value.toFixed(2) + " ms" },
+        { label: "Speed-up vs optimized BF16", value: r.ref ? "—" : (latBase / r.value).toFixed(2) + "×" },
+        { label: "Activations", value: r.activations }
+      ];
     });
     legend(container, [
       { bar: true, color: "var(--bar-ref)", label: "BF16" },
-      { bar: true, color: "var(--bar-ours)", label: "SACQ" },
-      { bar: true, color: "var(--bar-featured)", label: "SACQ-1.5b (highlighted operating point)" }
+      { bar: true, color: "var(--bar-ours)", label: "SACQ-1.5b, BF16 activations (A16)" },
+      { bar: true, color: "var(--bar-featured)", label: "SACQ-1.5b, INT8 activations (A8)" }
     ]);
   }
 
@@ -320,7 +337,7 @@
   }
 
   // ── Mount & resize ───────────────────────────────────────────
-  var renderers = { success: renderSuccess, memory: renderMemory, budget: renderBudget };
+  var renderers = { success: renderSuccess, efficiency: renderEfficiency, budget: renderBudget };
   var charts = Array.prototype.slice.call(document.querySelectorAll("[data-chart]"));
   var pending = null;
   function renderAll() { charts.forEach(function (c) { var r = renderers[c.getAttribute("data-chart")]; if (r) r(c); }); }

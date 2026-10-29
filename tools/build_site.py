@@ -217,7 +217,7 @@ def main():
 
     chart_data = {
         "success": data["figure1a_success_vs_bpw"],
-        "memory": data["figure1b_memory"],
+        "efficiency": data["figure1b_efficiency"],
         "budget": {
             "budgets": data["table8_limited_refinement"]["budgets"],
             "fittings": data["table8_limited_refinement"]["fittings"],

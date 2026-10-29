@@ -110,42 +110,44 @@ window.SACQ_DATA = {
       }
     ]
   },
-  "memory": {
-    "note": "Resident model memory of the full loaded policy (paper Figure 1b / Table 1).",
-    "rows": [
+  "efficiency": {
+    "note": "Paper Figure 1(b) v2 (2026-10-29): resident memory of the full loaded policy (Table 1) and inference latency of SACQ-1.5b. Latency: RTX 4090, batch 1, four denoising steps, synchronized CPU wall-clock median of the pure model forward; the three latency rows share the same runtime optimizations (fixed-weight caching, CUDA Graph). Stock GR00T runtime measures 56.035 ms and is not plotted. Raw values 21.284 / 20.203 / 14.066 ms.",
+    "memory": [
       {
         "label": "BF16",
-        "memory": 5.677,
-        "sr": 94.1,
+        "value": 5.677,
         "ref": true
       },
       {
-        "label": "SACQ-3b",
-        "memory": 1.902,
-        "sr": 94.1
-      },
-      {
-        "label": "SACQ-2b",
-        "memory": 1.31,
-        "sr": 94.25
-      },
-      {
         "label": "SACQ-1.5b",
-        "memory": 1.175,
-        "sr": 93.85,
+        "value": 1.175,
+        "note": "4.83× reduction",
         "featured": true
-      },
-      {
-        "label": "SACQ-1.25b",
-        "memory": 1.114,
-        "sr": 92.7
-      },
-      {
-        "label": "SACQ-1b",
-        "memory": 1.069,
-        "sr": 83.05
       }
-    ]
+    ],
+    "latency": [
+      {
+        "label": "Optimized BF16",
+        "value": 21.28,
+        "note": "1.00×",
+        "activations": "BF16",
+        "ref": true
+      },
+      {
+        "label": "SACQ-1.5b (A16)",
+        "value": 20.2,
+        "note": "1.05×",
+        "activations": "BF16"
+      },
+      {
+        "label": "SACQ-1.5b (A8)",
+        "value": 14.07,
+        "note": "1.51× faster",
+        "activations": "INT8",
+        "featured": true
+      }
+    ],
+    "stock_bf16_latency_ms": 56.04
   },
   "budget": {
     "budgets": [
