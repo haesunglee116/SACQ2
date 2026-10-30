@@ -185,7 +185,7 @@
     var E = DATA.efficiency;
     var width = Math.max(300, container.clientWidth);
     var rowH = 36, barH = 20, gap = 44;
-    var m = { top: 10, right: 16, bottom: 40, left: 128 };
+    var m = { top: 10, right: 16, bottom: 40, left: 122 };
     var innerW = width - m.left - m.right;
     var memH = E.memory.length * rowH, latH = E.latency.length * rowH;
     var height = m.top + memH + gap + latH + m.bottom;
@@ -207,7 +207,7 @@
       rows.forEach(function (r, i) {
         var cy = y0 + i * rowH + rowH / 2;
         var w = x(r.value) - x(0);
-        var cls = r.ref ? "ref" : (r.featured ? "featured" : "ours");
+        var cls = r.style || (r.ref ? "ref" : (r.featured ? "featured" : "ours"));
         text(svg, m.left - 10, cy + 4, r.label, { "text-anchor": "end", "class": "cat-label" + (r.featured ? " featured" : "") });
         var g = el("g", null, svg);
         var hit = el("rect", { x: m.left, y: cy - rowH / 2, width: innerW, height: rowH, "class": "bar-hit", tabindex: 0, role: "img",
@@ -246,14 +246,15 @@
     block(E.latency, m.top + memH + gap, [0, 28], [0, 10, 20], "Inference latency (ms)", "ms", function (r) {
       return [
         { label: "Latency (batch 1)", value: r.value.toFixed(2) + " ms" },
-        { label: "Speed-up vs optimized BF16", value: r.ref ? "—" : (latBase / r.value).toFixed(2) + "×" },
+        { label: "Speed-up vs BF16", value: r.ref ? "—" : (latBase / r.value).toFixed(2) + "×" },
         { label: "Activations", value: r.activations }
       ];
     });
     legend(container, [
       { bar: true, color: "var(--bar-ref)", label: "BF16" },
-      { bar: true, color: "var(--bar-ours)", label: "SACQ-1.5b, BF16 activations (A16)" },
-      { bar: true, color: "var(--bar-featured)", label: "SACQ-1.5b, INT8 activations (A8)" }
+      { bar: true, color: "var(--bar-featured)", label: "SACQ (W1.5)" },
+      { bar: true, color: "var(--bar-a16)", label: "SACQ (W1.5A16), 16-bit activations" },
+      { bar: true, color: "var(--bar-a8)", label: "SACQ (W1.5A8), 8-bit activations" }
     ]);
   }
 

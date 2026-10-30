@@ -111,7 +111,7 @@ window.SACQ_DATA = {
     ]
   },
   "efficiency": {
-    "note": "Paper Figure 1(b) v2 (2026-10-29): resident memory of the full loaded policy (Table 1) and inference latency of SACQ-1.5b. Latency: RTX 4090, batch 1, four denoising steps, synchronized CPU wall-clock median of the pure model forward; the three latency rows share the same runtime optimizations (fixed-weight caching, CUDA Graph). Stock GR00T runtime measures 56.035 ms and is not plotted. Raw values 21.284 / 20.203 / 14.066 ms.",
+    "note": "Paper Figure 1(b), final (2026-10-30): resident memory of the full loaded policy (Table 1) and inference latency at W1.5 (Table 3). Latency: official GR00T inference path, RTX 4090, batch 1, four denoising steps, GPU-synchronized wall-clock median of 20 measurements after five warmups, excluding preprocessing; BF16 uses the same common runtime optimizations and CUDA Graph execution. Raw values 21.284 / 20.203 / 14.066 ms.",
     "memory": [
       {
         "label": "BF16",
@@ -119,7 +119,7 @@ window.SACQ_DATA = {
         "ref": true
       },
       {
-        "label": "SACQ-1.5b",
+        "label": "SACQ (W1.5)",
         "value": 1.175,
         "note": "4.83× reduction",
         "featured": true
@@ -127,27 +127,28 @@ window.SACQ_DATA = {
     ],
     "latency": [
       {
-        "label": "Optimized BF16",
+        "label": "BF16",
         "value": 21.28,
         "note": "1.00×",
         "activations": "BF16",
         "ref": true
       },
       {
-        "label": "SACQ-1.5b (A16)",
+        "label": "SACQ (W1.5A16)",
         "value": 20.2,
         "note": "1.05×",
-        "activations": "BF16"
+        "activations": "16-bit (A16)",
+        "style": "a16"
       },
       {
-        "label": "SACQ-1.5b (A8)",
+        "label": "SACQ (W1.5A8)",
         "value": 14.07,
         "note": "1.51× faster",
-        "activations": "INT8",
+        "activations": "8-bit (A8)",
+        "style": "a8",
         "featured": true
       }
-    ],
-    "stock_bf16_latency_ms": 56.04
+    ]
   },
   "budget": {
     "budgets": [
